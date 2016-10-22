@@ -1,0 +1,341 @@
+Command Line mode operationse
+==============================
+
+Graphical User interface makes tasks easier.
+While Command line interfaces make difficult tasks possible.
+
+Using a Text Terminal on the Graphical Desktop
+================================================
+A terminal emulator program emulates (simulates) a stand alone terminal within a window on the desktop. By this we mean it behaves essentially as if we are logging into machine at a pure text terminal with no running graphical interface. 
+
+By default, on GNOME desktop environments, the gnome-terminal application is used to emulate a text mode terminal in a window. other available terminals include xterm, rxvt, konsole, terminator.
+
+The X window System
+====================
+The customizable nature of Linux allows you to drop the X window graphical interface or to start it up after the system has been running. 
+
+Certain distributions distinguish versions of the install media between desktop(with X) and server (without X); linux production servers are usually installed without X. Removing X from a production server can be helpful in maintaining a lean system which can be easier to support and secure.
+
+Virtual Terminals(VT)
+==================
+VT are console sessions that use the entire display and keyboard outside of a graphical environment. Such terminals are considered virtual because although there can be many active terminals, only one visible at a time. 
+
+Turning off Graphical Desktop
+=============================
+Linux distributions can start and stop the graphical desktop in various ways.
+
+For debian users, the desktop manager is run directly as service which can be simply stopped.
+For RPM based systems, the desktop manager is run directly by init when set to run level 5.
+switching to different run level stops the desktop.
+
+sudo service gdm stop or sudo service lightdm stop command to stop the graphical user interface in debian systems.
+
+
+sudo
+=====
+
+the functionality of sudo is same as run as"ADMIN" in windows machine.
+Sudo would be automatically setup by ubuntu
+For fedora or openSUSE family we need to setup sudo to work properly after installation.
+
+
+Setting up sudo
+================
+
+1. type su in the shell prompt
+2. it asks for password.
+3. we should see different prompt starting with #
+4. create a configuration file so that your user account would be able to use sudo
+5. typically this file is created in /etc/sudoers.d directory with the name of the file same as the user name.
+6. do echo "userName ALL=(ALL) ALL" > /etc/sudoers.d/username #replace username with the your username
+7. chmod 440 /etc/sudoers.d/username 
+
+
+Locating Applications
+======================
+
+In general executable programs resides in 
+/bin, /usr/bin, /sbin, /user/sbin or in /opt directory
+
+command : which Program // this will give corresponding location of Program executable.
+
+or 
+
+command : whereis Program //this will give corresponding location of Program executable, but searches in the broad location.
+
+
+Accessing directories
+=====================
+
+pwd : display present working directory.
+cd ~ : changes to your home directory
+cd : changes to your home directory
+cd .. : changes to parent directory
+cd - : changes to previous directory
+cd / : changes to the root directory 
+ls : list of contents in present working directory
+ls -a: list of contents in present working directory including hidden files
+tree : display tree view of file system
+     (tree path or folder)
+///usr is equivalent to /usr
+
+Hard and soft Symbolic links
+=============================
+
+ln : creates hard link
+ln -s : creates soft link
+
+ln fileName hardlinkName 
+ln -s fileName softLinkName
+
+Hardlink: The inode number is same for hardlink and fileName. That is there is only one file but it has more than one name associated it. 
+
+Softlink: Unlike hardlinks, softlinks can point to objects even on different file systems. If the file system doesn't exist it becomes dangling link. 
+
+
+Rebooting and shutdown
+======================
+
+The preferred method of shut down or rebooting a system is to use shutdown command.
+
+poweroff
+halt
+shutdown //shuts down the system
+shutdown -r //restarts the system
+shutdown -h // halts the system
+
+shutdown -(r/h) time(hh:mm) "Message if required"
+
+Standard File Streams
+=====================
+There are three standard file streams (or descriptors) always open for use:
+Standard input : stdin
+Standard output : stdout
+standard error : stderr
+
+stdin  is keyboard
+stdout, stderr is terminal.
+
+In linux all open files are represented internally by what are called file descriptors.
+That is simply these are represented by numbers starting from zero. 
+stdin is file descriptor 0
+stdout is file descriptor 1
+stderr is file descriptor 2
+
+if additional files are opened, they will start at the file descriptor 3 and increase from there.
+
+I/O redirection
+================
+
+if we have a file called do_something that reads from stdin and writes to stdout and stderr, we can change its input source by using the < symbol followed by file to be consumed for input data.
+do_something < input-file
+similarly output to a file can be redirected to someother file rather than stdout like
+do_something > output-file
+To redirect the error message to some other file we can use
+do_something 2> error-file
+
+A special shorthand notation can be used to put anything written to file descriptor (2 stderr) in the same place as of 1(std-out) 2>&1
+
+do_something > all-output-file 2>&1 or
+do_something >& all-output-file
+
+Pipes
+=====
+
+$ command1|command2|command3
+The above represents pipeline, where command2 and command3 do not have to wait for the previous pipeline commands to complete before they can begin hacking at the date in their input streams;
+
+On multiple CPU or core systems the available computer power is much better utilized and things get done quickier. In addition, there is no need to save ouput in temporary files between the stages in the pipeline, which saves disk space and reduce reads and writes from disk which is often the slowest bottle neck in getting something done.
+
+command1 is executed, then from the results of command1 filter them by using command2 and later command3
+
+
+locate
+======
+
+locate searchFileName or searchFileNamepart | grep condition
+
+locate chap2|grep Concept
+
+this gives the list of files containing string chap2 and then it greps the word Concepts in the list and filters them.
+
+updatedb will update the list of files in the system.
+
+ls Chap[235]* gives the list of files with name containing Chap2* chap3* Chap5*
+ls Chap[!235]* gives list of files whith name containing Chap1* Chap4* Chap6* Chap7*
+
+Using Find
+===========
+find directoryName -option searchString
+option: name 
+        type d f
+
+find directoryName -option searchString -exec commandName {} ';'
+find directoryName -option searchString -OK commandName {} ';'
+find . -name "*java" -exec javac {} ';'
+find . -name "*class"
+
+
+find files based on time and size
+===================================
+find $dir -ctime $days //file status was changed
+find $dir -mtime $days
+find $dir -atime $days
+find $dir -mmin $days
+find $dir -amin $dayszidri
+find $dir -cmin $days
+
+find $dir -ctime +$days or find $dir -ctime -$days
+find $dir -mtime +$days or find $dir -atime -$days
+find $dir -atime +$days or find $dir -mtime -$days
+
+find $dir -size $size
+find $dir -size +$size
+find $dir -size -$size
+
+find $dir -size +$size -exec command {} \;
+find $dir -szie -$size -exec command {} \;
+
+Viewing Files
+=============
+cat - used for very small files
+tac - view the file from backwards 
+tail -n $number $fileName view the last  $number of lines from the $fileName
+head -n $number $fileName view the first $number of lines from the $fileName
+
+touch 
+=====
+
+touch $fileName
+touch -t $timeStamp $fileName changes the timestamp to $timeStamp
+timeStamp=03201600(YYMMDDHHMM), this sets the time stamp to March 20 4pm(1600)
+
+mkdir
+=====
+mkdir $directoryName
+mkdir $dir/$subdir
+
+Modifying command prompt
+==========================
+export PS1='\u : \h > ' #will display the current user and the host name of the machine
+
+
+Package management system on Linux
+===================================
+The core part of linux distribution and most of its add-on software are installed via the package management system. 
+
+Each package contains the files and other instructions needed to make one software component work on the system. 
+
+Packages can be dependent on each other.
+
+For example, a package for a web based application written in PHP can depend on the PHP package.
+
+There are two broad families of package managers. i.e. those are based on Debian and those which use RPM as their low level package manager. 
+
+Both package management systems provide two tool levels (dpkg and rpm) that takes care of the detail of unpacking individual packages, running scripts and getting the software installed correctly.
+
+While a high level tool such as apt, yum and zypper works with groups of packages, downloads the packages from the vendor and figures out dependencies.
+
+Most of the time we work on the high level tools which will take care of calling low level tool as needed. Dependency tracking is particularly important feature of high level tool as it handles the detail of finding and installing each dependency for you.
+
+
+Commands
+=========
+High level package system in ubuntu
+-------------------------------------
+Install package and dependencies apt-get install foo
+Remove package and dependencies apt-get autoremove foo
+Update package and dependencies apt-get install foo
+update entire system apt-get dist-upgrade
+show package named foo apt-cache search foo
+show all available packages apt-cache dumpavail foo
+
+Low level package system in Ubuntu
+----------------------------------
+Install package dpkg --install foo.deb
+Remove package dpkg --remove foo.deb
+Update package dpkg --install foo.deb
+show all installed packages dpkg --list
+Get information on package dpkg --listfiles foo
+what package is file part of ? dpkg --search file
+
+In the past, many Linux programs were distributed as source code, which a user build into the required program or set of programs along with the required man pages, configuration files, and so on. 
+
+Nowadays, most linux distributors use prebuilt set of programs called PACKAGES which ship ready for installation on that distribution. 
+
+sudo apt-get install $packageName
+sudo apt-get install -s $packageName //simulation or dry run of the installation.
+
+apt-get reads the package list from /etc/apt/sources.list
+we can add more sources on /etc/apt/sources.list.d directory
+
+#remove package from the system
+sudo apt-get remove -s $packageName #simulation or dry run of the installation
+
+#remove package and its dependencies from the system
+sudo apt-get autoremove -s $packageName
+
+sudo apt-get autoremove  
+sudo apt-get autoremove $packageName
+
+#use purge option to remove configuration information.
+sudo apt-get purge $packageName
+sudo apt-get purge
+
+
+
+apt-get use a local database to determine what packages are installed.
+They can check installed levels against available levels.
+To do this information on available levels is retrieved from the sources that are listed in /etc/apt/sources.list and are stored in local system
+
+sudo apt-get update will synchronize the information in your local database with the sources specified in /etc/apt/sources.list. We should do this before installing a new software or modifying the /etc/apt/sources.list or /etc/apt/sources.list.d
+
+
+
+sudo apt-get dist-upgrade will upgrade all the packages.
+
+
+Changing the configuration
+===========================
+dpkg-reconfigure $packageName
+sudo debconf -show tzdata shows if the package is installed and details about the package.
+
+
+Study the Packages again.
+
+Summary:
+========
+Virtual terminals (VTs) in linux are consoles or command line terminals that use the connected monitor and keyboard.
+
+
+
+How to install application in Ubuntu?
+=======================================
+
+1. we can install software either by using terminal apt commands
+
+2. most of the time we use .dpkg file or .tar.gz file
+
+3.  use wget command to run the .deb file
+
+4. sudo dpkg --install .deb
+
+Add custom repository to the file
+--------------------------------------
+
+sudo add-apt-repository <repository_name>
+sudo apt-get update
+sudo apt-get install <application_name>
+
+
+cd /home/yourusername/Desktop/program-1.2.3
+
+Make sure you first read a file called INSTALL or INSTALL.txt or README. Check if there is any of these files with the ls command, and then display the right one with:
+
+xdg-open INSTALL
+
+The file will contain the right indications to go on with the compiling process. Usually the three "classical" steps are:
+
+./configure
+make
+sudo make install

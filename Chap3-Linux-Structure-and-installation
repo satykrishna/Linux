@@ -1,0 +1,141 @@
+Linux File System Basics
+========================
+Linux supports following file systems
+
+Conventional Disk File Systems:  ext2, ext3, ext4, XFS, Btrfs, JFS, NTFS etc.
+Flash storage file system: ubifs, JFFS2, YAFFS etc
+Database File System
+Special Purpose File System: procfs, sysfs, tmpfs, debugfs etc.
+
+Partitions and File Systems
+===========================
+A partition is a logical part of disk.
+A file system is a method of storing and finding files on a hard disk.
+
+The File System Hierarchy Standard
+====================================
+Linux systems store their important files according to a standard layout called FileSystem Hierarchy Standard or FHS.
+New drives are mounted as directories in the single file system. Often under /media.
+All linux file system names are case sensitive.
+The core utilities required for the system functionality are placed under / directory
+The utilities required for the user functionality only or the ones which are extravagent to system functionality are placed under /usr directory
+
+
+The Boot Process
+=================
+The linux Boot process is the procedure for initializing the system.
+
+Following are the steps
+-----------------------
+1. BIOS- The first step
+########################
+When the computer is powered on, the Basic Input/Basic Output system(BIOS) initializes the hardware, 
+including screen and keyboard and tests the main memory.
+
+This process is called POST(power on self test)
+BIOS software is installed in ROM chip on the motherboard.
+
+After this remainder of the boot process is completely controlled by the operating system.
+
+2. Master Boot Records(MBR) and Boot Loader
+############################################
+once POST or BIOS is completed,  the system control passes from the BIOS to the Boot Loader.
+The boot loader is usually stored on one of the hard disks in the system, either in the boot sector for BIOS/MBR systems or on the EFI partition for more recent Unified Extensible Firmware Interface or EFI/UEFI systems.
+
+There is no access to any mass storage media upto this stage.
+After this, information on the date and time and most important peripherals are loaded from CMOS values
+
+Boot loaders for linux are GRUB and ISOLINUX that are popular.
+The boot loaders acan present a user interface fo choosing alternative options for booting linux and even other OS that might be installed.
+When booting Linux, the boot loader is responsible for loading the kernel image and the initial RAM disck which has some files and device drivers needed to start the system into memory.
+
+
+Boot loader in action
+======================
+
+Two distinct stages
+-------------------
+
+First stage:
+
+for systems using BIOS/MBR method, the boot loader resides at the first sector of the hard disk known as Master Boot Record (MBR). The size of MBR is 512 Bytes.
+
+The size of MBR is 512 bytes. In this stage, the boot loader examines the partition table and finds a bootable partition. 
+
+Once it finds the bootable partition, it searches for second stage boot loader called GRUB and loads into RAM.
+
+For systems using EFI/UEFI method, UEFI firmware reads its Boot manager data to determine which UEFI application is to be launched and from where. for example, GRUB as defined in the boot entry in the firmware's boot manager. This procedure is more complicated but more versatile than the older MBR methods.
+
+Second stage: 
+
+The second stage boot loader resides under /boot. A splash screen is displayed which allows us to choose which OS to boot. 
+
+After choosing OS, boot loader loads the kernel of the selected Operating system into the RAM and passes control to it.
+
+The boot loader loads the selected kernel image. The Kernels are compressed always. So the first job is to uncompress itself. After this, it will check and analyze the system hardware and initialize any hardware device drivers into the kernel.
+
+The linux Kernel
+------------------
+
+The boot loader loads both kernel and initial RAM base file system (initramfs) into memory so it can be used by the kernel.
+When the kernel is loaded into RAM, it immediately initializes and configures the computer's memory and also configures all the hardware attached to the system.  This includes processors, I/O subsystems, storage devices etc. The kernel also loads some neessary user space applications.
+
+
+
+The Initial RAM Disk
+---------------------
+
+The initramfs file system image contains programs and binary files that perform all actions neeed to mount the proper root file system like providing kernel functionality for the needed file system and device drivers for mass storage controllers with a facility called udev which is responsible for figuring out which devices are present, locating the drivers they need to operate properly and loading them. After the root filesystem has been found, it is checked for errors and mounted.
+
+The mount program instructs the operating system that a filesystem is ready for use and associates with a particular point in the overall hierarchy of the file system(the mount point). If this is successful, the initramfs is cleared from the RAM and the init proram on the root filesystem (/sbin/init) is executed.
+
+init handles the mounting and pivoting over to the final real root file system. 
+If special hardware drivers are needed before the mass storage can be accessed, they must be in initramfs image.
+
+/sbin/init and Services
+-------------------------
+Once kernel has setup all its hardware and mounted the root file system, the kernel runs the /sbin/init program which is the initial process which starts the other process to get the system running.
+
+init is responsible for keeping the system runing anf for shutting down cleanly.
+It acts as manager of last resort for all non kernel processs, cleaning up after them when necessary and restarts user login services as needed when user log in and out.
+
+
+Text-Mode Login
+---------------
+
+Near the end of boot process, init starts a number of text-mode login prompts. This is because of program called getty. These enable you to type username and password and eventually get you to command shell. 
+
+ctrl+Alt+F1 key will shift to the text mode
+ctrl+Alt+F7 key will shift to the Graphic mode.
+
+
+X Window System
+---------------
+The X window system has service called Display manager which keepts track of displays being provided, and loads the X server. The display manager also handles graphical logins and starts appropriate desktop environment after a user login.
+
+A seamless desktop environment consists of session manager, window manager and set of utilities.  
+
+
+
+Choosing a Linux Distribution
+==============================
+
+Linux Installation: Planning
+----------------------------
+A partition layout needs to be decided at the time of installation because Linux system handle partitions by mounting them at specific points in the file system.
+
+Nearly all installers provide a reasonable file system layout by default, with either all space dedicated to normal files on one big partition and a smaller swap partition, or with a separate partitions for some space sensitive areas like /home and /var. 
+
+You may need to override the defaults and do something different if you have special needs or if you want to use more than one disk.
+
+Summary
+=======
+
+A partition is a logical part of the disk
+A filesystem is a method of storing/finding files on hard disk.
+By dividing hard disk into partitions, data can be grouped and separated as needed. 
+When failure or mistake occur, only the data in the affected partition will be damaged, while the data on the other partitions will likely survive.
+The boot process has multiple steps, starting with BIOS which triggers the boot loader to startup the linux kernel. From there the initramfs file system is inovked, which triggers the init program to complete the startup process.
+
+Determining the appropriate distribution to deploy requires that you match your specific system needs to the capabilites of different distributions
+

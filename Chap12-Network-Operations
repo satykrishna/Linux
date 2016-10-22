@@ -1,0 +1,321 @@
+ Addresses
+============
+
+Devices attached to a network must have atleast one unique network address identifier known as IP address. The address is essential for routing packets of information through the network.
+
+Exchanging of information across the network requires use of streams of byte-sized packets, each of which contains a piece of information going from one machine to another. 
+
+IPV4 and IPV6
+=============
+
+IPV4 is older and is mostly used.
+
+IPV6 is newer and designed to get past the IPV4 limitations.
+
+IPV4 uses 32 bits for addresses. There are only 4.3 billion unique addresses available.
+
+However, there are many addresses are allocated reserved but not used.
+
+IPV6 uses 128 bits for addresses thus there are 3.4x10^38 unique addresses, we can move to IPV6 from IPV4 because it provides more unique addresses. 
+
+IPV6 and IPV4 are not inter-operate. Due to this, IPV6 requires significant effort and hasn't been successfully fast as originally intended.
+
+Decoding IPV4 address
+=====================
+
+A 32 bit IPV4 address is divided into four octets (4x8 = 32 bits)
+
+Example:
+IP address →            172  .           16  .          31  .         46
+Bit format →           10101100.         00010000.     00011111.     00101110
+                       (Octet 1)         (Octet 2)     (Octet 3)     (Octet 4)
+
+Network addresses are divided into 5 classes. 
+
+Class A, B, C, D, E
+
+Classes A, B, C are divided into two parts: Network addresses (Net Id) and Hist addresses(Host ID). The NetID is used to identify the network and Host Id is used to identify a host in the network.
+
+Class D is used for multi cast applications (information is broadcast to multiple computers at the same time).                      
+
+Class E is used for future purpose.
+
+
+Class A Network
+===============
+
+Class A addresses use the first octet in IP address as their Net ID and use other three octets as the Host ID. 
+
+The first bit is set to 0. Thus there are only 7 bits available in Octet1. and out of which 0-0000000 and 1-1111111 are reserved. Thus the maximum of 126 clas A networks are available. Thus these networks are feasiable when there are less networks and large hosts. 
+
+Each class A network can have upto 16.7 million unique hosts on the network. 
+The range of host address would be 1.0.0.0 to 127.255.255.255
+
+Class B Network Addresses
+==========================
+
+Class B addresses use the first two octets of their IP address for NetId and last two as Host ID.
+The first two Bits are 10 in the first octet. Thus with remaining 14 bits we can have at max 	16384 Class B networks. The first octet of a class B address has value from 128 to 191.
+
+Each class B network can support 65535 unique hosts in the network. The range of hosts address is from 128.0.0.1 to 191.255.255.255
+
+Class C Network Addresses
+=========================
+
+Class C addresses use the first three octets of the IP address as their Net ID and the last octet as their Host ID. The first three bits of the first octet are set to binary 110, so almost 2.1 million (21-bits) Class C networks are available. The first octet of a Class C address has values from 192 to 223. These are most common for smaller networks which don't have many unique hosts.
+
+Each Class C network can support up to 256 (8-bits) unique hosts. The range of host address is from 192.0.0.0 to 223.255.255.255.
+
+
+IP Address Allocation
+=====================
+
+Typically a range of IP addresses are requested from ISP by your organization administrator. Often which Class of Ip address given to you depends on the size of your network and expected growth needs.
+
+Ip addresses can be assigned manually or dynamically. When you assign Ip address manually, you add static addresses to the network. When you assign IP addresses dynamically, the DHCP is used to assign IP addresses.
+
+Manually Allocating IP addresses
+================================
+
+Before assigning a IP address, one must identify the network size by determining the host range.
+ipcalc program can be used to ascertain the host range.
+
+Assume that we have Class C Network. The first octets of Ip address are 192.168.0, As it uses 3 octets for the network mask, the short hand for this address is 192.168.0.0/24. 
+
+
+Name Resolution
+================
+
+Name Resolution is used to convert numerical IP address to hostname.
+
+hostname -I #will display the ipaddress of the system.
+
+host $websiteName #gives the ipaddress associated with that hostname.
+
+dig $domainName #gives the ip address of the domainName
+
+cat /etc/resolv.conf
+cat /etc/hosts 
+
+nslookup $domainName #gives the ipaddress of the domain name.
+
+Network Interfaces
+==================
+
+Network Interfaces are a connection channel between a device and a network.
+Physically Network Interfaces can proceed through a NIC(Network Interface Card) or can be more abstractly implemented as software.
+
+We can have multiple network interfaces operating at once. 
+Specific interfaces can be brought up and down at any time.
+
+sudo ifconfig #gives list of current active network interfaces.
+
+Network Configuration Files
+===========================
+
+Network configuration files are essential to ensure that interfaces function essentialy.
+
+For debian configuration, the basic network configuration file is /etc/network/interfaces
+
+ /etc/network/interfaces start #will start the networking configuration.
+
+ Network Configuration Commands
+ ===============================
+
+ ip addr show #show the ip address
+
+ ip route show #show the routing information
+
+ Ping
+ ====
+
+ ping is used to check whether or not a machine attached to network can receive and send data. 
+ it confirms that the remote host is online and responding.
+
+ ping $hostName #pings the hostname.
+
+ ping is frequently used for network testing. 
+
+ ping -c $hostName #limits the number of packets that ping will send before it quits.
+
+ route
+ =====
+
+ A network requires the connection of many nodes.
+
+ Data moves from source to destination by passing through a series of routers and potentially across multiple networks. 
+
+ Servers maintain routing tables containing the address of each node in the network.
+
+ The IP routing protocols enable routers to build up a forwarding table that correlates final destinations with the next hop addresses.
+
+ route #view or change the IP routing table.
+
+ route -n #show current routing table.
+
+ route add -net $ipAddressRoute #add static route.
+
+ route del -net $ipAddressRoute #delete static route.
+
+
+ traceroute
+ ==========
+
+ traceroute is used to inspect the route which the data packets takes to reach the destination host which makes it quite useful for troubleshooting networking delays and errors.
+
+ traceroute $domain #print the route taken by packet to reach the network host.
+
+
+
+More Networking Tools
+======================
+
+Networking tools are very useful for monitoring and debugging network problems such as network connectivity, network traffic.
+
+ethtool
+=======
+
+Queries network interfaces and can also set various parameters such as the speed.   
+
+sudo ethtool $networkInterfaceName #queries the network interface with interfaceName
+
+
+netcat
+======
+
+netcat displays various network related information such as network connections, routing tables, interface stats, masquerade connections, multicast memberships etc.
+
+netstat -a #lists all ports both listening and not listening
+netstat -at #lists all tcp ports
+netstat -au #lists all udp ports
+netstat -l #lists sockets in listening stage
+netsatat -lt #lists only listening TCP ports
+netsatat -lu #lists only listening UDP ports
+netstat -lx #lists only listening unix ports
+netstat -s #lists statistics for each protocol
+nestat -st #lists statistics for TCP ports
+netstat -su #lists statstics for UDP ports
+netstat -c #lists netstat information continously
+netstat -r #displays kernel routing information 
+netstat -ap | grep $program #displays on which port program is running
+netstat -an | grep $portNo #displays process which is using particular port
+netstat -i #shows list of network interfaces.
+netstat -ie #shows details of network interfaces just like ifconfig
+
+
+nmap
+====
+
+The nmap tool offers various methods to scan a system. 
+
+nmap -v $hostName #scans using hostName
+nmap -v $ipAddress #scans using ipAddress
+nmap -sP $ipAddress #gives the list of active nodes on the network with the given ipaddress
+
+tcpdump
+=======
+
+tcpdump is a most powerful and widely used command line packet sniffer or package analyzer tool which is used to capture or filter TCP/IP packets that are received or transferred over a network on a specific interface.
+
+sudo tcpdump -i $interfaceName #capture packets from the interface with interfacename
+
+tcpdump -D #display all available interfaces.
+
+
+iptraf
+======
+
+iptraf is a console-based network stats utility for Linux. It gathers variety of figures such as TCP connection packet and byte counts, interface stats and activity indicators. 
+
+sudo iptraf #opens iptraf terminal to monitor traffic.
+
+Graphical and Non Graphical Browsers
+====================================
+
+firefox, Google chrome, Chromium, Epiphany, Opera are the Graphical browsers
+lynx, links, w3m are non graphical browsers.
+
+wget
+====
+
+Sometimes you need to download files and information.
+wget has capacity to handle large file downloads, recursive downloads, password required downloads, multiple file downloads.
+
+wget $URLNAME #downloads a single file with wget
+wget $ftpProtocol $httpProtocol #downloads the file from ftphost with ftpProtocol and httpHost from httpProtocol
+wget -i $readURLfromGivenFile #store number of URL's in the text file and download them with -i option
+wget -c $readFromURL #downloads the file fromURL if it is not completed previously.
+wget -b $readFromURL #downloads files in background
+wget -c --limit=$downloadspeed $pathofLogFile $readfromURL #restrict download speeds to downloadspeed.
+wget -O $fileName $urlName #download and store with a different file name
+wget --user-agent=$BROWSER_AGENT_NAME  $urlToDownload #make user agent and display wget like browser using wget -user-agent.
+wget --spider $DownLoadURL #test download url using wget -spider.
+wget --tries=$NumberofTries $DOWNLOAD_URL #increase number of retries to make download successful.
+wget --mirror -p --convert-links -P $localDirectory website-url
+wget --reject=$rejectionType $WebSiteToDownload
+wget -o $logFile $urltoDownload #logs messages to a log file instead of stderr using wget -o
+wget -Q$size -i $filewithlistofURLS #quit downloading when it exceeds certain size using wget -Q
+wget -r -A$downloadType $urltoDownload #download certain type of files from url using -r -A option
+wget $ftpURL #ftp download with wget
+wget --ftp-user=$username --ftp-password=$password $ftpURL #ftp download using wget with username and password authentication.
+
+curl
+=====
+
+curl is a software package which consists of command line tool and a library for transferring data using URL syntax.
+
+curl supports various protocols like DICT, FILE, FTP, FTPS, Gopher, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, STFP, SMTP, SMTPS, telnet and TFTP.
+
+curl $URL > $fileName #downloads the url to a given filename
+
+curl -o $saveFile $url  # save the url with saveFile name
+curl -O $url #save the url with the same file name
+
+curl -L $urlName #follow http location headers with -L option
+
+curl -O $url1 -O $url2 #fetch multiple files at a time
+
+curl -c $url1 #resume the previous download
+
+curl --limit-rate 1000B -O $url #limits the data transfer
+
+curl -z $date $url #download url if it is modified after this date.
+
+curl -u $username:$password $url #pass http authentication in cURL.
+
+curl -u $ftpuser:$ftppassword -O $ftpURL #downloads files from FTP server.
+
+curl -T $fileName $ftpURL #uploads the files to ftp server.
+
+FTP Clients
+============
+
+Browsers can act as ftp clients
+filezilla allows use of drag and drop approach to transfer files between two hosts
+
+
+A FTP protocol is a method in which computers from various remote locations can access files located on specific computer. Setting up FTP can benefit in many ways like accessing files on your home computer while travel or at your work. To setup FTP between two computers, you must enable FTP server on one specific computer. We can then access FTP server from any other windows or MAC computer as long as you have IP address and server info for the computer with FTP server.
+
+
+ftp, sftp, ncftp, yafc are some command ftp clients
+sftp is a safe and secure mode of connection which uses SSH protocol.
+
+SSH
+===
+
+SSH is a cryptographic network protocol used for secure data communication.
+it is also used for remote services and other secure services between two devices on network and is very useful for adminsitering systems which are not easily available to physically work on but to which you have remote access to.
+
+ssh $remoteSystem $myCommand #executes myCommand on a remote system via SSH
+
+SCP
+===
+
+We can move files securely using SCP between two networked hosts. scp uses SSH protocol for transferring data.
+
+scp $localFile $remoteSystem #copies localFile to a remote system
+
+
+
+
+

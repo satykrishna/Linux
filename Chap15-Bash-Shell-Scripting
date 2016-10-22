@@ -1,0 +1,143 @@
+Introduction to Shell Scripting
+================================
+
+#!/bin/bash 
+
+The above statement indicates that it is a command line interpreter which is tasked with executing statements that follow it in the script file.
+
+There are different types of shells or command line interpreters in UNIX they are : 
+/bin/bash
+/bin/sh
+/bin/tcsh
+/bin/csh
+/bin/ksh
+
+
+bash Scripts
+============
+
+source $script.sh #will execute the script file
+bash script.sh  #will execute the script file however, the extension is not required.
+
+
+Interactive Example using bash scripts
+=======================================
+
+read Variable #will read the variable
+
+Return Values
+==============
+
+All shell scripts generate a return value upon finishing the execution of a script file.
+The value can be set with the exit statement.
+Return values permit a process to monitor the exit state of another process often in parent-child relationship.
+This helps to determine how this process terminated and takes appropriate steps if necessary.
+
+Viewing Return Values
+======================
+
+The return value is always stored in $? environment variable
+0 => indicates success
+1 => indicates failure
+
+Basic Syntax and Special Characters
+====================================
+
+# used to add comment, except when executed as \# or as #! when starting a script
+\ used to indicate the continuation on next line
+; used to indicate that what follows is a command
+$ indicate what follows is a variable
+
+command1; command2; command3 #indicates that executes command1 followed by command2 and command 3
+command1&&command2 && command3 #executes command1, 2 and 3 sequentially however if one command fails the execution stops there and doesn't execute its succeeding commands.
+command1 || command2 || command3 #executes the commands1,2 3 till if any one of them succeeds.
+
+Functions
+==========
+
+A function is a set of block that implements a set of operations.
+Functions are very useful to execute the procedures multiple times perhaps with varying input variables. Functions are also often called subroutines. 
+
+Use of functions in a script requires two steps.
+
+1. Declaration of a function
+2. Calling a function 
+
+
+Built-in Shell Commands
+=======================
+
+Shell scripts are used to execute sequences of commands and other types of statements.
+Commands can be divided into following categories:
+1. compiled applications like rm, vi, ls, df, vi, gzip
+2. built in bash commands like cd , pwd, echo, read, logout, let and ulimit
+3. other scripts like help
+
+Command substitution
+======================
+
+Sometimes we might need to substitute result of one command in another to do so use
+ command1 $(command2) #substitute results of command2 in command1
+
+Environment Variables
+======================
+
+Almost all scripts use variables containing a value which can be used anywhere in the script.
+These variables can be either user or system defined. Many applications use such environment variables for supplying inputs or validation and controlling behaviour.
+
+export Variable=value #sets the evnvironment variable to value.
+Variable=value;export Variable #sets the variable and it is exported as environment variable
+
+env  #gives list of environment variables
+printenv #gives list of environment variables
+set #gives list of environment variables.
+
+Exporting variables
+====================
+By default, variables created in one script are available only to subsequent steps of that script.
+Any child processes or sub-shells do not have automatic access to the values of these variables.
+To make it as available to child processes they must be promoted to environment variables using export command.
+
+child processes are allowed to modify the export variables. The parent will not see any changes. export variables are not shared but are copied to child processes.
+
+Script parameters
+=================
+
+script file can be executed along with parameters.
+
+scriptfile arg1 arg2 arg3
+
+$0 => arg1
+$1 => arg2
+$2 => arg3 and so on
+$* => all parameters
+$# => number of arguments
+
+Output redirection
+==================
+
+Most OS accept input from the keyboard and display output on the terminal. we can redirect the output to a file using > & >> operator. While second one appends the data to file anad first one creates or over write the data in existing file.
+
+Input redirection
+=================
+
+The input of a command can be read from a file.
+The process of reading the command from the file is called input redirection and uses < character.
+
+The if Condition
+=================
+
+evaluation of statements in a if condition is based on the condition such as 
+1. Numerical or String comparisons2
+2. Return value of a command
+3. File existence or permissions
+
+if condition
+then 
+    statements;
+else
+    statements;
+fi;
+
+
+use help test to see more information about condition that we can place in if loop

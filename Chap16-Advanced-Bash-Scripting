@@ -1,0 +1,154 @@
+String manipulation
+====================
+
+[[ string1 > string2 ]] #compares the sorting order of string1 and string2 
+[[ string1 == string2 ]] #compares the characters in string1 and string2
+myLength1=${#string1} #stores the length of string1 in myLength1.
+
+var1="value";
+echo ${var1}another #will give the output valueanother
+
+
+#!/bin/bash
+#set the var1 value to default if var1 is not set
+var1=${var1:-default}
+# echo $var1
+
+var2="Kaka"
+var2=${var2:-default}
+
+
+#if var1 is set, use already set value, otherwise set var1 value as default
+var=${var:=default}
+# echo $var
+
+#if var is set then set var3 to surendra
+var3=${var+surendra};
+# echo $var3;
+
+#if var is not set, then throw some exception saying that var is not set
+# echo ${var4?"This variable is not set"};
+
+#assign a variable with number based on a condition
+a=$((45 < 35 ? 37:89))
+echo $a
+
+#indirect variable declaration
+var1="Some data here"
+var2="$var1"
+echo $$var2 #prints the value of var1
+echo ${!var2} #prints the value of var1
+
+#string length calculation
+len=${#str}
+
+#substring 
+substr=${str:beginningPos}
+
+#substring from start to end
+substr=${str:start:end}
+
+#print last 4 characters of string.
+substr=${str:-4}
+
+#print two characters which are in 4th and 3rd position from last
+substr=${str:-4:2}
+
+str="abcxyzabc"
+
+#strips the shortest string between a and c from LHS traversal
+substr=${str#a*c} #result:xyz
+
+#strips the longest string matching between a and c from RHS traversal
+substr=${str##a*c} #result: <NoOutput>
+
+#strips the shortest string between a and c from RHS traversal
+substr=${str%a*c} #result:abcxyz
+
+#strips the longest string between a and c from RHS traversal
+substr=${str%%a*c} #result: <NoOutput>
+
+#removes occurences of xyz 
+substr=${str//xyz} #result abcabc
+
+#replaces occurence of xyz with abc
+substr=${str/xyz/abc} #result abcabcabc
+
+#replaces if occurence of xyz is at beginning with abc
+substr=${str/#xyz/abc}
+
+#replaces if occurence of xyz is at the end with abc
+substr=${str/%xyz/abc}
+
+
+#String manipulation : convert str to uppercase and store in substr
+substr=${str^^} 
+
+#String manipulation: convert str's first character  to upper case
+substr=${str^}
+
+#String manipulation: convert only characters are a, e, i, o, u
+substr=${var^^[aeiou]}
+
+#String manipulation: convert str to lowercase and store in substr
+substr=${str,,}
+
+#String manipulation: convert str's first character to lower case 
+substr=${str,}
+
+#String manipulation:  convert characters aeiou of str to lower case
+substr=${str,,[aeiou]} 
+
+#toggle first character of string str
+substr=${str~}
+
+#toggle all characters of string str
+substr=${str~~}
+
+#toggle characters of str only if it is [aeiou]
+substr=${str~~[aeiou]}
+	
+
+
+check if the variable is set or not
+===================================
+
+var1=abc
+var2= #variable2 is not set
+var1:-default #if var1 is not assigned set it to default value
+
+
+
+Parts of a string
+=================
+
+At times, you may not need to compare or use an entire string.
+we need to use substring if required.
+
+${$string:$begin:$noofcharacters} #selects the part of the string beginning from the begin character and selects noofcharacters
+
+
+Boolean expressions
+===================
+
+&& 
+|| 
+!
+
+The Case Statement
+==================
+
+#use examples or slides in the edx.org site
+
+
+Creating Temporary Files and Directories
+=========================================
+
+mktemp temp.XXX #creates temporary file
+mktemp -d tempXXXX #creates temporary directory
+
+
+Discarding output with /dev/null
+================================
+
+redirect the output 

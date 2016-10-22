@@ -1,0 +1,52 @@
+We can use CLI (Command Line Interface) or Graphical User Interface (GUI) when using Linux. 
+
+OpenSUSE uses KDE instead of GNOME.
+
+GNOME Desktop Environment
+===========================
+
+KDE is used by OpenSUSE
+GNOME is used by Debian Family
+Other desktop environment include unity, Xfce, LXDE
+
+GUI startup
+===========
+The default display manager for GNOME is called gdm 
+Other popular display managers include lightdm & kdm
+
+
+Locking screen
+===============
+keyboard shortcut ctrl+alt+L
+
+viewing files
+=============
+Nautilus is the file manager of file browser
+ctrl-1, ctrl-2, ctrl-3
+
+show hidden files ctrl+h
+nautilus : alt+f2
+search textbox: ctrl+f
+specific directory access: ctrl-L
+
+Removing a file
+===============
+Deleting a file in nautils will automatically move the deleted files to the 
+.local/share/Trash/files
+
+Default directories under Home are Desktop, Documents, Downloads
+
+
+Summary:
+========
+
+GNOME is a popular desktop environment and graphical user interface that runs on the top of 
+the Linux OS.
+The default display manager for GNOME is called gdm
+The gdm display manager presents the user with login screen which prompts user name and password.
+
+Logging out through the desktop environment kills all processes in your current X-session and returns to the display manager login screen.
+
+Every user created in the system will have a home directory 
+Each linux distribution comes with its own set of desktop backgrounds
+

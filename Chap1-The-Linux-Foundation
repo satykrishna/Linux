@@ -1,0 +1,70 @@
+Section #1 - Linux Foundation 
+==============================
+Keep in mind of linux foundation events that happens every year
+The objectives of Linux foundation is to promote linux and to provide neutral collabaration and 
+education and to improve linux as a technical platform and to sponsor work of Linus Torvalds
+
+
+Section #3 - Course software Requirements
+===========================================
+The three major distributions of linux and their family distributions that we are using :
+
+1. Ubuntu (belongs to Debian Family Systems)
+2. OpenSUSE ( belongs to SUSE Family Systems)
+3. CentOS (belongs to Fedora Family Systems)
+
+Fedora has following distributions
+------ 
+ 1. RHEL - Red Hat Enterprise Linux
+ 2. CentOS
+ 3. Scientific Linux
+ 4. Oracle Linux
+
+Facts about Fedora Family
+==========================
+Fedora family is upstream for CentOS, RHEL and Oracle Linux
+The Linux kernel 2.6.32 version is used in RHEL/CentOS 6.x
+Hardware platforms that it support : x86, x86-64, itanium, powerpc and IBM system.
+It uses RPM based yum package manager to install, update and remove packages from the system.
+
+SUSE Family: The relationship between SUSE, SUSE linux enterprise server (SLES) and openSUSE is similar to the one described with Fedora, RHEL and CentOS
+------------
+Facts about SUSE Family: 
+========================
+SUSE linux enterprise server (SLES) is upstream for openSUSE
+The Linux kernel 3.11 version is used in RHEL/CentOS 6.x
+Hardware platforms that it support : x86, x86-64, itanium, powerpc and IBM system.
+It uses RPM based Zypper package manager to install, update and remove packages from the system.
+It includes the YAST application for system admin purposes
+it is widely used in retail sector
+
+Debian Family
+=============
+The debian family is upstream for several other distributions including Ubuntu and Ubuntu is upstream for linux mint and others.
+it is most commonly used for servers and desktop computers.
+Ubuntu aims at providing a good comprimise between stability and ease of use for long term.
+Ubuntu also has access to large software repository.
+
+
+Facts about Debian Family
+===========================
+The debian family is upstream for Ubuntu and Ubuntu is upstream for linux mint and others.
+The linux kernel 3.13 is used in ubuntu 14.04
+It used DPKG-based apt-get package manager to install, update and remove packages in the system.
+Ubuntu has been used for cloud deployments.
+While Ubuntu uses Unity based GUI which is GNOME-based and thus differs visually from other Debian Systems even though it is part of Debian Family.
+
+Summary
+=======
+The linux foundation is non profit consortium dedicated to fostering the growth of linux
+The linux foundation is for the community and by the community
+There are three major distributions of linux : FEDORA, SUSE and DEBIAN.
+
+
+Note:
+
+Fedora - yum
+
+SUSE - zypper
+
+Debian - apt-get  GUI: unity

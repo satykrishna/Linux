@@ -1,0 +1,10 @@
+Creating Files without Using an Editor
+======================================
+
+echo line one > myFile #will writes the line one to myFile
+echo line two >> myFile #will append line two to myFile
+echo line three >> myFile #will append line three to myFile
+
+cat << $ENDSTRING > $FILENAME
+
+The above methods would be helpful to create files in scripts.

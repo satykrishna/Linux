@@ -1,0 +1,51 @@
+Important Linux Documentation Sources
+======================================
+The man pages (short for manual pages)
+GNU info
+The help command and --help option
+Other Documentation sources http://www.gentoo.org/doc/en
+
+Man
+===
+
+man -f commandName gives brief description of what command will do that.
+whatis commandName gives brief description of what command will do that.
+
+man -k commandName gives the list of possible commands with the commandName part of it.
+apropos commandName gives the list of possible commands with the commandName part of it.
+
+The man pages are divided into nine numbered chapters (chap 1 to chap 9)
+
+man chapterNumber commandName gives that chapterNumber of that command Name
+man -a commandName giveslist of all chapters available in all manual pages where the command Name is used
+
+The GNU info System
+===================
+GNU info system resembles man in many ways. The topics in info are connected are using links.
+Information can be viewed through either a command line interface, a graphical help utility, printed or viewed online.
+
+Introduction to help option
+============================
+man --help option is useful as quick reference and it displays information faster than the man and info pages.
+
+it is the best way to see the what are the possible options for the given command.
+y
+gnome-help will provide graphical desktop help mode
+
+some of the help pages are available as part of /usr/share/doc directory, the information that we get is package information
+
+Summary
+=======
+
+The main source of linux documentation are the man pages, GNU info page, the help options and command and a rich variety of online documentation sources.
+
+The man utility searches, formats and displays man pages.
+
+The man pages provide in-depth documentation about programs and other topics about the system including configuration files, system calls, library calls and routines.
+
+The GNU Info system was created by GNU project as its standard documentation. It is robust and is accessible via command line, web and graphical tools using info
+
+short descriptions for commands are usually displayed with -h or --help argument.
+
+you can type help at the command line to display a synopsis of built in commands 
+

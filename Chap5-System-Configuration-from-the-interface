@@ -1,0 +1,52 @@
+System, Display, Date and Time Settings
+========================================
+
+NTP protocol is the most popular and reliable protocol for setting the local time
+via internet servers.
+
+
+
+Installing and updating Software
+==================================
+
+Each package in a Linux distribution provides one piece of the system such as the linux kernel, the C compiler, the shared software code for interacting with USB devices or the firefox web browser.
+
+
+Packages often depend on each other. For example, because Firefox can communicate using SSL/TLS, it will depend on a package which provides the ability to encrypt and decrypt SSL and TLS communication and will not install unless that package is also installed at the same time.
+
+One utility handles the low level details of unpacking a packae and putting the pieces in the right places. Most of the time, we will be working with a higher-level utility which knows how to download packages from the internet and can manage dependencies and groups for you.
+
+Debian Family System
+====================
+
+Lets look at package management in the Debian Family system.
+
+dpkg is the underlying package manager for these systems. It can install, remove and build packages.
+Unlike higher-level package management systems, it doesn't automatically download and install packages and satisfy their dependencies.
+
+For debian based systems, the higher level package management system is the apt (Advanced Package Tool) system of utilities. Generally, whle each distribution with in the debian family uses apt, it creates its own interface on top of it like Ubuntu Software Center.
+
+
+RPM:
+RPM is used in Fedora based linux distributions
+RPM is another package management system like dpkg. 
+The higher level package manager is yum just like apt
+The default user interface is PackageKit
+
+Open SUSE's YAST software management
+=====================================
+
+YAST is used as higher level package manager just like apt or yum with RPM as underlying package manager.
+
+Summary
+========
+
+The network time protocol is the most popular and reliable protocol for setting local time via internet servers.
+
+The diplay panel will allow you to change the resolution of your display and configure multiple screens.
+
+dpkg and RPM are most popular package management systems used on Linux Distributions.
+
+Debian distributions uses dpkg and apt based utilities for package management.
+RPM was developed by Red Hat and adopted by number of other distributions including openSUSE, Mandriva, CentOS, Oracle Linux and others.
+

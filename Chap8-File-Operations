@@ -1,0 +1,291 @@
+Introduction to file systems
+=============================
+
+In Linux it is often said that "Everything is a file".
+This implies that when you are dealing with normal data files and documents or with other devices such as sound cards and printers you interact them with same kind of I/O system.
+
+FileSystem Hirearchy Standard (FHS)
+====================================
+
+The FHS provide Linux developers and administrators with a standard directory structure for the file system which provides consistency between systems and distributions.
+
+Partition
+=========
+Each filesystem resides on a hard disk partition.
+Partitions help to organize the content of disk according to kind of data.
+For instance, important programs required to run systems are often kept on a separate partition known as root(/). 
+
+and other files owned by the regular users of that system are in partition (/home).
+
+Mount Points
+=============
+
+We need to mount the file system at a mount point.
+This is simply a directory where the file system is to be attached. 
+Sometimes you may need to create the directory if it doesn't exist.
+
+if you mount a file system on non-empty directory the former contents of that directory are covered up and not accessible until the filesystem is unmounted.  Thus mount points are empty directories.
+
+More about Mount Points
+========================
+
+mount $deviceNode $mountPoint
+
+ex: mount /dev/sda5 /home will attach filesystem containing in the disk partition associated with 
+
+$deviceNode = partition associated with the device node.
+
+mount #show all presently mounted file systems.
+
+
+df -Th #this command will display information about mounted file systems including usage #statistics about currently used and available space. 
+
+
+The Network File System (NFS)
+=============================
+Using NFS is one of the methods used for sharing data across physical systems.
+Many administrators mount remote user's home directories on a server inorder to give them access to the same files and configuration files across multiple client systems. 
+This allows the users to login to different computers and yet stil have access to same files and resources.
+
+NFS on the server
+=================
+on server machine NFS daemons and other system servers are typically started with the following command
+
+sudo service nfs start
+
+The text file /etc/exports contains the directories and permissions that a host is willing to share with other systems over NFS. An entry in this file would be like this.
+
+/projects *.example.com(rw)
+
+
+This entry implies that /projects directory to be mounted on NFS with read &  write permissions and shared with other hosts in the example.com domain.
+
+once this file is modified use exportfs -av command to notify linux about the directories that you are allowing to be remotely mounted using NFS.
+or use sudo sudo service nfs restart
+
+NFS on the client
+=================
+
+mount servername:/projects /mt/nfs/projects
+
+
+
+Proc File system
+=================
+
+Certain file system mounted at /proc are called pseudo file systems. 
+The /proc file system contains virtual files that permit constantly varying kernel data.
+
+
+the /dev Directory
+==================
+The /dev directory contains device nodes, a type of pseudo file used by most hardware and software devices except for network devices. This directory is empty on disk partition when it is not mounted.
+
+Contains entries which are created by udev system which creates and manages nodes on Linux. 
+The /dev directory contains following items such as 
+
+/dev/sda1
+/dev/lp1
+/dev/dvd1
+
+the /bin and /sbin directory
+============================
+the /bin and /sbin directory contains executable binaries and essential commands used in single user mode and essential commands required by all the system users such as ps, ls, cp.
+
+the /var and /etc directory
+============================
+
+The /var directory contains files that are expected to change in size and content as the system is running. 
+
+system log files /var/log
+package and database files /var/lib
+print Queues /var/spool
+Temp files /var/tmp
+
+The /etc directory contains the system configuration files. 
+It contains no binary programs.
+the file resolve.conf tells the system will tell where to get DNS to IP mapping.
+
+Files like passwd, shadow and group for managing user accounts are found in /etc directory.
+
+the /boot directory
+====================
+This directory contains the few essential files needed to boot the system.
+They are : 
+
+1. vmlinuz
+2. initramfs
+3. config
+4. System.map
+
+
+the /lib directory
+===================
+/lib contains the libraries for essential programs in /bin directory.
+the library names either start with ld or lib
+
+kernel modules(kernel code often device drivers that can be loaded and unloaded without re-starting system) are located in /lib/modules/<kernel-version-number>
+
+The /media directory
+====================
+the /media directory is typically located where removable media such as CDs DVDs and USBs are mounted. 
+
+Additional Packages
+=====================
+/opt : Optional application software packages.
+/sys : Virtual pseudo file system giving information about the system and the hardware 
+/srv : Site specific data served up by the system
+/tmp : Temporary files.
+/usr : Multi User applications, utilities and data.
+/usr/include : Header files 
+
+/usr/include Header files used to compile applications.
+/usr/lib 	Libraries for programs in /usr/bin and /usr/sbin.
+/usr/lib64 	64-bit libraries for 64-bit programs in /usr/bin and /usr/sbin.
+/usr/sbin 	Non-essential system binaries, such as system daemons.
+/usr/share 	Shared data used by applications, generally architecture-independent.
+/usr/src 	Source code, usually for the Linux kernel.
+/usr/X11R6 	X Window configuration files; generally obsolete.
+/usr/local 	Data and programs specific to the local machine. Subdirectories include bin, sbin, lib, share, include, etc.
+/usr/bin 	This is the primary directory of executable commands on the system. 
+
+Comparing the Files
+===================
+
+diff is used to compare files and directories. 
+This often-used utility program has many useful options.
+
+diff -criw $file1 $file2 #compares the changes made to be done on file 1 in order to match to file2.
+
+diff -u $file1 $file2 will display the required output, which says the changes needed to be done on file1 inorder to match to file2.
+
+diff -e $file1 $file2 > $scriptFile #gives the list of changes b/w file1 and file2
+echo "w" >> $scriptFile #appends the writing permission for file1
+ed - $file1 < $scriptFile #will override the file1 with changes present in $scriptFile to match file2
+diff $file1 $file2 #no result, both are same.
+
+diff -y $file1 $file2 #displays the differences in the file in two columns.
+
+diff -b $file1 $file2 #Ignore any changes which only change the amount of whitespace (such as spaces or tabs).
+diff -w $file1 $file2	#Ignore whitespace entirely.
+diff -B $file1 $file2 #Ignore blank lines when calculating differences.
+diff -y $file1 $file2 #Display output in two columns.
+
+Using diff3 and Patch
+======================
+diff3 $myFile $commonFile $yourFile
+
+to apply patch following steps are performed:
+
+diff -Nur $originalFile $newFile > $patchFile
+
+patch -p1 $patchFile #applies the changes in the entire directory tree structure
+patch $originalFile $patchFile #applies the changes to a particular file
+
+File Utility
+============
+file $fileName #gives the filetype of $fileName.
+
+Backing up Data
+===============
+There are many ways to backup the system.
+
+1. cp
+2. rsync 
+
+rsync: rsync can be used to copy files locally as well as from one machine to another.
+Locations are designated in the target:path where target=[user@localhost] user@ part is optional if the remote user is different from the local user.
+
+rsync $sourceFile $destinationFile
+
+rysnc -anv $sourceFile $destinationFile #n option for dry run
+
+rysnc -av $sourceFile $username@remote_host:destination_directory
+
+rysnc -av username@remote_host:source_directory placetosyncOnLocalMachine
+
+rsync -az $source $destination #compresses the text files while sending for efficient transfer
+
+rsync -azP $source $destination #shows the progress bar while sending the files
+
+rsync -azP --delete $source $destination #deletes the files in destination if some files are #deleted in source.
+
+rsync -azp --exclude=$pattern_to_exclude --include=$pattern_to_include $source $destination
+#sync the files by excluding the pattern & including the pattern.
+
+Compressing Data
+================
+gzip : The most frequent used linux compression utility
+bzip2 : produces files significantly smaller than those produced by gzip
+xz : The most space efficient compression utility used in Linux.
+zip : is often required to examine and decompress archives from othe OS.
+
+gzip -r $directory #zip the directory, creates .gz extension
+gunzip $directory.gz #unzip the directory, unzip .gz extension files.
+
+bzip2 -r $directory #creates the .bz2 file extension
+bunzip2 -r $directory.bz #unzip the directory, unzip .bz2 files.
+
+xz $fileName #compresses the fileName
+xz -dk $fileName.xz #decompress fileName.xz into fileName and removes fileName.xz
+xz -dcf a.txt b.txt.xz > abcd.txt #decompresses a mix of a.txt and b.txt.xz into abcd.txt file.
+xz -d * #decompresses the files in present working directory
+
+zip backup * #compresses all the file in present working directory and places them in backup.zip
+zip -r backup $directory #compress all the files in the directory recursively and places them in backup.zip
+
+unzip backup.zip #extracts all the files in the file backup.zip and places them in the current directory
+
+zip -r $backup $directory #compress all the files in $directory and places in $backup.zip
+unzip 
+
+tar xvf myDir.tar #Extracts all the files in myDir.tar into myDir directory
+
+tar xvf $tar #extracts all the file in $tar which can have extensions of .gz, .xz, .bz2.
+
+tar cvf $tarName $directory #creates tar with required extension .xz, .tar, .zip, .gzip, .bz2 if required. 
+
+Disk to Disk Copying
+====================
+	
+dd program is useful for making copies of raw disk space. For example, to backup MBR : the first 512 byte sector on the disk that contains a table describing the partitions on the disk), to type
+
+dd if=/dev/sda of=sda.mbr bs=512 count=1
+dd if=/dev/sda of=/dev/sdb #copies the /dev/sda disk system to /dev/sdb disk system, This command #might override the existing data in hard disk.
+
+Labs
+====
+
+Typically the mount command will show more file systems mounted than are shown in /etc/fstab file
+
+another way to see mounted file systems cat /proc/mounts
+
+
+Summary
+=======
+The key concepts covered in this chapter are
+
+File system tree always start with root directory
+
+Filesystems can be mounted anywhere on the main filesystem tree at a mount point. Automatic filesystem mounting can be set up by editing /etc/fstab.
+
+Filesystems like /proc are called pseudo filesystems because they exist only in memory.
+
+NFS (The Network Filesystem) is a useful method for sharing files and data through the network systems
+
+
+/var may be put in its own filesystem so that growth can be contained and not fatally affect the system.
+
+/boot contains the basic files needed to boot the system
+
+patch is a very useful tool in Linux. Many modifications to source code and configuration files are distributed with patch files as they contain the deltas or changes to go from an old version of a file to the new version of a file.
+
+File extensions in Linux do not necessarily mean that a file is of a certain type.
+
+cp is used to copy files on the local machine while rsync can also be used to copy files from one machine to another as well as synchronize contents.
+
+gzip, bzip2, xz and zip are used to compress files.
+
+tar allows you to create or extract files from an archive file, often called a tarball. You can optionally compress while creating the archive, and decompress while extracting its contents
+
+dd  can be used to make large exact copies even of entire disk partitions efficiently.

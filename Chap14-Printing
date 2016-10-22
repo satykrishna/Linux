@@ -1,0 +1,252 @@
+Introduction to Printing
+========================
+
+To manage printers and print directly from a computer or across a networked environment, we need to know how to configure and install a printer.
+
+Printing itself requires a software that convert the application that you are using to a language that your printer can understand.
+
+CUPS is the software used by the linux OS for printing. CUPS stands for common UNIX printing system.
+
+CUPS overview
+==============
+
+CUPS is the software used by the applications like web browser or Libreoffice. It converts the page described by the application to a language that printer can understand. Inotherwords, it acts as server to printer.
+
+CUPS make use of modular printing system which accomodates variety of printers made by different companies and also different data formats.
+
+CUPS often figures out things on its own by detecting and configuring any printers that it locates.
+
+
+How does CUPS work
+==================
+
+CUPS carry out the printing process with the help of various components.
+
+configuration files
+--------------------
+
+The print scheduler reads server settings from several configuration files, mainly cupsd.conf and printers.conf, these are stored in /etc/cups directory
+
+cups.conf is where most system-wide specific settings are located. It doesn't contain any printer-specific details. Most of the settings available in this file are related to network security which checks what kind of systems can access CUPS network capabilites, how printers are advertised on local network and what management features are offered and so on.
+
+printers.conf is where we find all the printer specific settings. 
+For every printer connected to the system, a corresponding section describes printer's status and capabilites. This file is generated once we add printer to a system and is not modified by hand.
+
+
+scheduler
+---------
+CUPS is designed around a print scheduler that manages print jobs and handles administrative commands, allows users to query the printer status and manages the flow of data through all CUPS components. It has GUI which allows to view and manipulate the order and status of pending jobs.
+
+job files
+----------
+CUPS stores print requests as files under the directory /var/spool/cups which can be accessed before a document is sent to a printer.
+Data files are prefixed with d while control files are prefixed with c
+after a printer successfully handles the job, the data files are automatically removed.
+These data files belong to print queue.
+
+log files
+---------
+log files are located in /var/log/cups and are used to record printing related activity which include access, error and page records.
+
+filter
+------
+CUPS use filters to convert job file format to printable format.
+
+printer drivers
+---------------
+printer drivers contain description for currently connected and configured printers. It is usually stored under /etc/cups/ppd directory. 
+
+backend
+-------
+The print data is sent to the printer through a filter via a backend that help to locate devices connected to the system.
+
+Hence, when you execute the print command, the scheduler validates the command and process the print job and crate the job files according to the settings specified in configuration files.
+Simultaneously, the scheduler records activities in log files. Jobs are processed with the help of filter, printer driver and back end and then sent to printer.
+
+Install CUPS
+=============
+
+sudo apt-get install cups #manually installs CUPS
+
+Managing CUPS
+=============
+
+After installing CUPS, you'll need to start and manage the CUPS daemon so that CUPS is ready for configuring a printer. Managing the CUPS daemon is simple; all management features are wrapped around the cups init script, which can be easily started, stopped, and restarted.
+
+sudo /etc/init.d/cups start #will start the cups dameaon
+sudo /etc/init.d/cups restart #will restart the cups dameaon
+sudo /etc/init.d/cups stop #will stop the cups dameaon
+sudo update-rc.d cups enable  #starts cups daeamon at root time
+
+
+Configure a printer from the GUI
+=================================
+
+when configuring a printer make sure that the printer device is turned on and connected to the system or network. If so, it should be shown in printer section menu. If the printer is not visible, we may need to trouble shoot using the tools that will determine if the printer is connected.
+
+Go to settings -> printers -> add new
+
+Adding Printers from CUPS web interface
+========================================
+CUPS comes with its own server which makes configuration interface available via CGI scripts
+
+This interface allows us to 
+  1. Add and remove local or remote printers
+  2. Configure printers like local or remote printers; share a printer as a CUPS server
+  3. share a printer as CUPS server
+  4. control print jobs such as monitoring, showing pending jobs, cancel or move jobs
+
+Printing from GUI 
+==================
+
+ctrl+p is the shortcut.
+
+http://localhost:631 is the UI for cups server.
+
+Printing from Command line interface
+====================================
+
+CUPs has to command line interfaces
+
+ 1. lp
+ 2. lpr
+
+ These can be used to print text, post script, PDF and image files.
+
+ we can use these commands in script file to print.
+
+ Using lp
+ ========
+
+ lp and lpr accept command line options
+
+ lp $fileName #to print the file to default printer.
+
+ program | lp  #prints the output of a program
+
+ echo string | lp  #pints output of a program
+
+ lp -n $number $fileName #prints number of copies of fileName
+
+ lp -d $printerName #sets the default printer with name printerName
+
+ lpq -a #shows the queue status
+
+ lpadmin #to configure printer queues
+
+ loptions -d $printerName #sets the default printer with name printerName
+
+ Managing print jobs
+ ===================
+
+ lpstat -p -d #to get list of all available printers along with their status
+ lpstat -a #To check the status of all connected printers, including job numbers
+ cancel $jobId #To cancel a print job
+ lpmove $jobId $newPrinter #to move a print job to a new printer
+
+ Working with PostScript
+ =======================
+
+ Postscript is a standard page description language.
+ It effectively manages scaling of fonts and vector graphics to provide quality printouts.
+ It is purely a text format that contains the data fed to a post interpreter
+ Features are
+  1. It can be used on any printer that is PostScript-compatible; i.e., any modern printer
+  2. Any program that understands the PostScript specification can print to it
+  3. Information about page appearance, etc. is embedded in the page
+
+enscript
+========
+
+enscript $file #prints the file with default properties
+enscript -# $n $file #prints n copies of the file.
+enscript -B $file #prints the file without a header
+enscript -f $fontName $file #prints the file with given font
+enscript -r $fileName #prints the file in landscape mode
+enscript -$nr $fileName #prints the file in landscape mode with n columns
+enscript -$njr $fileName #prints the files in landscape mode with n columns and a border around each column
+enscript -C $fileName #This prints line numbers in the portrait mode
+enscript -P $printerName $fileName #prints the file to printername printer
+enscript -a $start-$end $fileName #this print from start to end page in the file
+enscript -p $file.ps $file #converts the given file to post script format
+enscript -n -p $file.ps $file # converts the given file to post script format wih n columns in the page
+
+
+
+Viewing PDF content
+====================
+
+Evince, Okular, Ghostview, Xpdf are the tools or applications that are available as open source to see the pdf content.
+
+
+Modifying PDFs with pdftk
+=========================
+
+With pdftk tool we can 
+merge, split, or rotate pdf document.
+We can also repair corrupted PDF pages
+pull single pages from a file
+encrypt and decrypt a pdf file
+Add, update and export PDF metadata
+Export bookmarks to a text file
+fill out pdf forms
+
+
+Using pdftk
+===========
+
+pdftk A=$pdf1 B=$pdf2 shuffle A B output $output.pdf #creates output.pdf with 1st page from pdf1 and second page from pdf2 and 3rd page from pdf1 and 4th page from pdf2.
+
+pdftk A=$pdf1 B=$pdf2 shuffle A Bend-1 output $output.pdf #creates output.pdf with 1st page from pdf1 and last page from pdf2 and 2nd page from pdf1 and last but one from pdf2 and so on.
+
+pdftk $pdf1 $pdf2 cat output $output.pdf #concatenate pdf1 and pdf2 to output.pdf
+
+pdftk A=$pdf1 B=$pdf2 cat A B output $output.pdf #concatenate pdf1 and pdf2 to output.pdf
+
+pdftk *.pdf cat output $output.pdf #concatenate all pdf in present directory to output.pdf
+
+pdftk A=$pdf1.pdf cat A$start1-$end1 $start2-$end2 output $output.pdf #creates output.pdf with 
+pages from start1 to end1 and start2 to end2.
+
+pdftk $pdf output doc.unc.pdf uncompress #uncompress pdf file for editing it in a text editor
+
+pdftk $pdf burst #burst the given pdf or cut the given pdf into multiple pdfs with each pdf containing 1 page.
+
+pdftk $pdf cat $direction output $output.pdf #rotate entire pdf document into that direction.
+for example
+
+pdftk in.pdf cat 1-endsouth output out.pdf #Rotate an entire PDF document to 180 degrees
+
+Encrypting pdf files
+=====================
+pdftk $pdf output $private.pdf user_pw PROMPT #it will prompt to set the required password and we need to enter password every time.
+
+pdftk $pdf secured.pdf input_pw $password output $output.pdf #decrypt a pdf with given valid password
+
+pdftk $pdf output $output.pdf owner_pass PROMPT #Encrypt a PDF using 128-bit strength (the default), withhold all permissions (the default)
+
+pdftk 1.pdf output 1.128.pdf owner_pw PROMPT user_pw PROMPT  #allow printing once the document is open
+
+Using Additional Tools
+======================
+
+pdfinfo $pdf #can extract info about PDF files especially when files are large
+flpsed $pdf #can add data to post script document and is benificial for filling forms.
+pdfmod $pdf #can provide graphical interface for modifying PDF documents. Using this tool, you can reoorder, rotate and remove pages. export images from a document, edit title, subject, author and keywords and combine documents using drag and drop option
+
+
+Converting between postscript and PDF
+======================================
+
+ps2pdf and pdf2ps are tools available from ghostscript package.
+pstopdf and pdftops are available from poppler package.
+
+ps2pdf file.ps #converts file.ps to pdf format
+pdf2ps file.pdf #converts file.pdf to file.ps
+pstopdf input.ps output.pdf #converts input.ps to output.pdf
+pdftops input.pdf output.ps #converts input.pdf to output.ps
+
+evince $file.ps #will display the file.ps 
+psnup -$option $file.ps $newfile.ps #will set the number of pages per sheet as per option
+
+

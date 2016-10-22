@@ -1,0 +1,236 @@
+Identifying the Current User
+=============================
+
+who #list the currently logged on users 
+who -a #gives more details about the currently logged on users.
+who -b #gives info on when the system was rebooted last time.
+
+whoami #gives the current user.
+
+Basics of Users and Groups
+==========================
+
+Linux uses groups for organizing users.
+Groups are collections of accounts with certain shared permissions.
+Control of group membership is administered through /etc/group file which shows list of groups and their members. 
+
+By default every user belongs to a primary or default group. When a user logs in, the group membership is set for their primary group and all other members enjoy the same privilege.
+
+Permissions on various files and directories can be modified at group level.
+
+All linux users has UID (user Id) and one or more GID(group Id) 
+
+Historically Fedora systems start with UIDs at 500 and other distributions begin at 1000.
+
+These numbers are associated with names through files /etc/passwd and /etc/group.
+
+For example, the /etc/passwd file  might contain:
+george:x:1002:1002:George Metesky:/home/george:/bin/bash
+and the /etc/group file might have george:x:1002
+
+Adding and Removing Users
+==========================
+
+sudo useradd $userName #will add the userName 
+
+sudo -r userdel $userName #will completely delete the userName
+
+id $userName #gives the details of userid
+
+Adding and Removing Groups
+==========================
+
+sudo /usr/sbin/groupadd $newGroup #will add newGroup
+sduo /usr/sbin/groupdel $delGroup #will delete the delGroup
+
+groupmod $options #this is used to change the group properties.	
+
+groups $userName #gives the list of groups that user belongs to
+
+sudo /usr/sbin/usermod -G $groupName $userName #will add username to the groupName
+
+The root Account
+================
+
+The root account is powerful and has full access to the system. it is often called as administrator or super user account.
+
+you can use sudo feature to assign more limited privileges to user accounts only on temporary basis, only for specific subset of commands.
+
+su and sudo
+============
+
+when assigning elevated privileges you can use the command su to launch a new shell running as another user. 
+
+Elevating to root account
+=========================
+
+To fully become root, one merely types su and then is prompted for root password.
+
+sudo $commandName 
+
+sudo configuration files are stored in the /etc/sudoers file and in the /etc/sudoers.d/ directory.
+By default sudoers.d directory is empty.
+
+Startup Files
+=============
+
+In linux, command shell program generally uses one or more files to configure environment. 
+Files in /etc directory define global settings for all users.
+Files in /ur directory  override the global settings for particular user.
+
+The startup files can do anything the user would like to do in every command shell such as customizing the user's prompt, defining command-line shortcuts and aliases, setting the default text editor, setting the path for where to find executable programs.
+
+
+Order of the startup files
+==========================
+
+when you first login to linux, /etc/profile is evaluated, after which it searches for ~/.bash_profile, ~/.bash_login ~/.profile in order. it ignores the rest of the files if the preceding file is found.
+
+Environment Variables
+======================
+
+One can type set, env, export to view the current environment variables of system.
+
+Setting Environment Variables
+==============================
+
+echo $Variable #shows specific value of the variable
+
+export Variable=Value;
+Variable=Value;export $Variable;
+
+To add variable permanently, edit ~/.bashrc and add export Variable=Value; and then type source ~/.bashrc or .~/.bashrc or start a new bash shell.
+
+The Home Variable
+==================
+
+echo $HOME 
+
+pwd #shows present working directory
+
+cd #change to ~ directory without an argument
+
+The PATH variable
+==================
+
+PATH is an ordered list of directories which is scanned when a command is given to find the appropriate program or script to run.
+
+Each directory in the path is separated by colons (:) 
+
+A null directory name indicates the current directory at any given time.
+
+:path1:path2 or path1::path2 has null directory name.
+
+to prefix your local directory to the path
+
+export PATH=$HOME/bin:$PATH
+
+
+The PS1 variable
+================
+
+Prompt statement (PS) is used to customize your prompt string in your terminal windows to display the information you want.
+
+PS1 is the primary prompt variable which controls what your command line prompt looks like. The following are the special characters included in PS1.
+
+\u : username
+\h : hostname
+\w : current working directory
+\! : History number of this command
+\d : date
+
+Even better practice would be to save the old prompt first and then restore as in
+export OLD_PS1=$PS1;
+
+change the prompt and eventually change it back with
+PS1=$OLD_PS1.
+
+The Shell Variable
+===================
+
+The environment variable SHELL points to the user's default command shell and contains the full path name to the shell.
+
+echo $SHELL
+
+Recalling Previous Commands
+===========================
+
+history #gives the list of previously executed commands
+
+
+Using History Environment Variables
+====================================
+
+echo $HISTFILE #gives the location of the history file 
+
+echo $HISTFILESIZE #gives the maximum number of lines stored in the history file.
+
+echo $HISTSIZE #stores the maximum number of lines in the history file for the current session.
+
+!! #executes the previous command
+
+CTRL-R #searches the previously used commands
+
+CTRL-L #clears the screen
+
+CTRL-D #exits the current shell
+
+CTRL-Z #push the current process into suspended background.
+
+CTRL-C #kills current process
+
+CTRL-H #works the same as backspace
+
+CTRL-A #goes to beginning of the line
+
+CTRL-E #goes to end of the line
+
+CTRL-W #deletes the word before cursor
+
+CTRL-U #deletes from beginning of line to cursor position.
+
+Creating aliases
+================
+
+alias #gives the list of current aliases 
+
+
+File Ownership
+==============
+
+chown $userName $fileName #changes ownership of a file or directory to the userName
+
+chgrp: used to change group ownership
+
+chmod : used to change the permissions on the file which can be done separately for owner, group and rest of the world(often named as other).
+
+File Permission Modes and chmod
+===============================
+
+rwx: rwx: rwx
+ u:   g:   o
+
+
+$ ls -l test1
+-rw-rw-r-- 1 coop coop 1601 Mar 9 15:04 test1
+$ chmod uo+x,g-w test1
+$ ls -l test1
+-rwxr--r-x 1 coop coop 1601 Mar 9 15:04 test1
+
+
+where u stands for user (owner), o stands for other (world), and g stands for group.
+
+This kind of syntax can be difficult to type and remember, so one often uses a shorthand which lets you set all the permissions in one step. This is done with a simple algorithm, and a single digit suffices to specify all three permission bits for each entity. This digit is the sum of:
+
+    4 if read permission is desired.
+    2 if write permission is desired.
+    1 if execute permission is desired.
+
+Thus 7 means read/write/execute, 6 means read/write, and 5 means read/execute.
+
+When you apply this to the chmod command you have to give three digits for each degree of freedom, such as in
+
+$ chmod 755 test1
+$ ls -l test1
+-rwxr-xr-x 1 coop coop 1601 Mar 9 15:04 test1
+

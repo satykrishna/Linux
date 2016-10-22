@@ -1,0 +1,194 @@
+User Accounts
+=============
+
+Each User is identified by a Unique Integer (UID).
+
+For each user following fields are maintained in /etc/passwd file
+
+Username
+Password
+UserID
+GroupID
+UserInfo
+HomeDirectory
+Shell
+
+
+Types of Accounts
+==================
+
+Linux has four types of accounts
+
+1. root
+2. system
+3. normal
+4. network
+
+
+last #which shows the last time each user logged into the system 
+
+Understanding the root account
+==============================
+
+root is the most privileged account on a LINUX/UNIX machine.
+The account has the ability to carry out all facets of the system administration including adding accounts, changing user passwords, examining log files and installation of software.
+
+sudo -i #will take you to root privilege.
+sudo bash #will switch to root privilege.
+
+Operations that require root privileges
+=======================================
+
+root privileges are required to perform operations such as 
+
+1. creating, removing and managing user accounts
+2. Managing software packages.
+3. Removing or modifying files.
+4. Restarting system services.
+
+
+Operations that dont require root privileges
+============================================
+
+A regular account user can perform some operations require special permissions.
+However the system configuration must allow 
+
+
+SUID (Set owner User ID upon execution—similar to the Windows "run as" feature) is a special kind of file permission given to a file. SUID provides temporary permissions to a user to run a program with the permissions of the file owner  (which may be root) instead of the permissions held by the user.
+
+Operations that do not require Root privilege 	Examples of this operation
+Running a network client:                 	Sharing a file over the network
+Using devices such as printers: 	            Printing over the network
+Operations on files that the user has proper permissions to access 	  Accessing files that you have access to or sharing data over the network
+Running SUID-root applications 	Executing programs such as passwd.
+
+Sudo Features
+==============
+
+sudo has the ability to keep track of unsuccessful attempts at gaining root access.
+
+Users authorization for using sudo is based on configuration information stored in /etc/sudoers file and in the /etc/sudoers.d directory.
+
+A message such as following would appear in a system log file (/var/log/secure) when trying to execute sudo bash without successfully authenticating the user.
+
+authentication failure; logname=op uid=0 euid=0 tty=/dev/pts/6 ruser=op rhost= user=op
+conversation failed
+auth could not identify password for [op]
+op : 1 incorrect password attempt ;
+TTY=pts/6 ; PWD=/var/log ; USER=root ; COMMAND=/bin/bash
+
+The sudoers File
+=================
+
+When sudo is invoked, a trigger will look at /etc/sudoers and the files in /etc/sudoers.d to determine if user has right to use sudo and what scope of their privilege is. Unknown user requests and requests to do operations not allowed to the user even with the sudo are reported. 
+
+visudo #edits the sudoers file ensuring that only one person is editing the file at a time, has the proper permissions and refuses to write out the file and exit if there is an error in the changes made.
+
+
+The basic entry structure is
+
+WHO WHERE = (AS_WHOM) WHAT
+
+The file has a lot of documentation in it about how to customize.
+Most of the linux distributions now prefer you add a file in the directory /etc/sudoers.d with the same name as user. This file contains the individual users sudo configuration and one should leave the master configuration file untouched except for changes that affect all users. We shouldn't touch the master configuration file. 
+
+Command Logging
+===============
+
+By default, sudo commands and any failures are logged in /var/log/auth.log or /var/log/messages or /var/log/secure on linux distributions.
+
+running command such as sudo whoami results in a log file entry such as:
+Dec 8 14:20:47 server1 sudo: op : TTY=pts/6 PWD=/var/log USER=root COMMAND=/usr/bin/whoami
+
+Process Isolation
+=================
+
+Linux is considered to be more secure than many other OS because processes are naturally ISOLATED from each other.
+
+One process cannot access the resources of another process even when that process is running with the same user privileges. Linux thus make it difficult for virus and security to attack and access random file on the system.
+
+Additional to that security mechanisms such as cgroups, LXC, virtualization.
+
+Hardware Device Access
+======================
+
+Linux limits user access to non networking hardware devices in a manner that is extremely similar to limiting a regular file access.
+
+Applications interact by engaging the filesystem layer,this layer opens a device special file often called as device node under /dev directory that corresponds to device being accessed. 
+
+Each device node has standard owner, group and other permission fields. Thus security is naturally enforced as it is a standard file.
+
+How passwords are stored
+========================
+
+The system verifies the authenticity and identity using user credentials.
+
+Originally encrypted passwords were stored in /etc/passwd file which was readable by everyone.
+On modern systems, passwords are actually stored in encrypted format in a secondary file named /etc/shadow. only root has access to modify/read this file.
+
+Password Encryption
+===================
+
+SHA-512 algorithm is used.
+The security applications where SHA-512 is used include TLS, SSL, PHP, SSH, S/MIME and IPSEC.
+
+sha512sum  $fileName #command is used to produce sha512 for file content in fileName
+
+
+Good password Practices
+=======================
+
+1. Password Aging.
+
+chage --list $userName #gives the details for the current userName when he changed the password the last time.
+
+2. Use Pluggable Authentication Modules (PAM). PAM can be configured to automatically verify that a password created or modified using the passwd utility is strong or not.  
+
+PAM configuration can be implemented by using pam_cracklib.so 
+
+3. another method is to use password cracking programs such as John The Ripper to secure password file and detect weak password entries.
+
+Requiring Boot loader passwords
+===============================
+
+You can secure the boot process with a secure password to prevent someone from bypassing the user authentication step. 
+
+For the older grub version, you can invoke grub-md5-crypt which will prompt you for password and then encrypt as shown.
+
+Then edit the following file /boot/grub/grub.conf by adding the following entry
+
+password --md5 $1$Wnvo.1$qz781HRVG4jUnJXmdSCZ30
+
+You can also force passwords for only certain boot choices rather than all.
+
+For Grub Version 2, we have flexibility to set use user-specific passwords. Edit the system configuration files in /etc/grub.d directory and then run update-grub. 
+
+
+Hardware Vulnerability
+=======================
+
+Security can be compromised by key logging, network sniffing, Booting with a live disk, Remounting and modifying disk content.
+
+Some of the security guidelines would be 
+
+The guidelines of security are:
+
+    Lock down workstations and servers
+    Protect your network links such that it cannot be accessed by people you do not trust
+    Protect your keyboards where passwords are entered to ensure the keyboards cannot be tampered with
+    Ensure a password protects the BIOS in such a way that the system cannot be booted with a live or rescue DVD or USB key
+
+For single user computers and those in a home environment some of the above features (like preventing booting from removable media) can be excessive, and you can avoid implementing them. However, if sensitive information is on your system that requires careful protection, either it shouldn't be there or it should be better protected by following the above guidelines. 
+
+Summary
+=======
+
+The root account has entire authority over the system.
+
+root privileges may be required for tasks such as restarting services, manually installing packages and managing parts of file system that are outside your home directory.
+
+In order to perform any privileged operation such as system-wide changes, you need to use either su or sudo.
+
+calls to sudo trigger a lookup in the /etc/sudoers file or in /etc/sudoers.d directory which validates that calling user is allowed to use sudo and it is used with in permitted scope.
+
+One of the most powerful features of sudo is that it has ability to log unsuccessful attempts at gaining root access. In debian family sudo commands and failures are logged in /var/log/auth.log.

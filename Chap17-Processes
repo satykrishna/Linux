@@ -1,0 +1,202 @@
+What is a process??
+==================
+
+A process is simply an instance of 1 or more related tasks (threads) executing on your computer.
+It is not same as program or command. A single program may actually start several processes simultaneously. Some processes are independent of each others and others are related. 
+A failure of one process may or may not affect the others running on the system
+
+Processes use many system resources such as memory, CPU(Central processing unit clock cycles) and peripheral devices such as printers and displays. 
+
+Operating System is responsible for allocating a proper share of these resources tp each process and ensuring overall optimum utilization.
+
+
+Process Types
+==============
+
+A terminal window is a process that runs as long as needed.
+It allows users to execute programs and access resources in an interactive environment. 
+We can also run programs in background which means they can be detached from the shell.
+
+The different types of processes are
+
+Interactive processes : 
+
+Neeed to start by the user, either at a command line or through a graphical interface such as an icon or menu selection. ex: bash, firefox, top
+
+Batch processes: 
+
+Automatic processes which are scheduled from and then disconnected from the terminal. These tasks are scheduled in FIFO basis. ex: updatedb
+
+Daemons : 
+
+Server processes that run continously, Many are launched during system startup and then wait for a user or system request indicating that their service is required. ex: http, xinetd, sshd.
+
+Threads:
+
+Lightweight processes. These are tasks that run under umbrella of a main process, sharing a memory and other resource but are scheduled and run by system on individual basis. An individual thread can end without terminating the whole process and process can spawn new threads at any time. Many non-trivial programs are multi threaded.
+	ex: gnome-terminal, firefox
+
+Kernel Threads:
+
+Kernel tasks are the tasks that user neither start nor terminate and they have little control over them. These may perform actions like moving a thread from one CPU to another, or making sure input/output operations to disk are completed.
+ex: kswapd0, migration, ksoftriqd
+
+
+process scheduling and states
+=============================
+
+when process is in a so-called runnable state. it meant it is either executing instructions on a CPU or waiting for a share(or time slice) so it can run.
+
+A critical kernel routine calls scheduler constantly shifts processes in an out of the CPU, sharing time according to relative priority, how much time is needed and how much time is already given to that task. 
+
+All the processes in this state("runnable") will reside on a run queue and on a computer with multiple CORES or CPUS we have one queue per core.
+
+However sometimes processes go into what is called sleep state. Generally, when they are waiting for something to happen before they can resume, perhaps for the user to type something. In this condition a process is sitting in wait queue.
+
+There are some less frequent process states especially when process is terminating. 
+Sometimes a child process completes but its parent process has not asked about its state. 
+Such processes are said to be in zombie state. 
+
+
+Process and Thread IDs
+======================
+
+At any time, there are multiple processes being executed. The OS keeps track of them by assigning each of them a unique process id (PID) number 
+
+PID (PROCESS ID) :  "UNIQUE PROCESS ID NUMBER "
+PPID (PARENT PROCESS ID) : "PROCESS(PARENT) THAT HAS STARTED THIS THREAD"
+TID (THREAD ID) : " THREAD ID NUMBER: THIS IS SAME AS PID FOR SINGLE THREADED SYSTEMS HOWEVER FOR MULTIPLE THREADED SYSTEMS THIS MIGHT BE DIFFERENT"
+
+
+pstree displays relationship between parent and child process and displays threads in curly braces.
+
+User ID and Group IDs
+=====================
+
+Many users can access a system simultaneously and each user can run multiple processes.
+The OS identifies which user started this process by using the users RUID(Real Users ID)
+
+The User who determines the access rights for the users is identified by using EUID(Effective User ID) 
+
+Users can be categorized into various groups. Each group is identified by Realgroup or RGID and then access rights of RGID are determined by EGID. 
+
+
+More about priorities
+======================
+
+higher the priority the lower the nice value and viceversa.
+
+The ps command
+==============
+
+ps provides information about currently running processes. 
+
+ps #gives the information about processes running under the current shell.
+ps -u  #gives list of processes running with the given userid.
+
+ps aux #displays the list of processes of all users.
+
+ps axo stat, priority, pid, cpu #gives the list of all processes of all users with only columns stat, priority, pid, cpu
+
+kill -9 $pid #kills the process with the process id pid.
+
+top
+====
+
+top #command displays the constant real time updates of system performance 	unil we type q 
+
+#first line of the top output
+#-----------------------------
+#it displays how long the system is up, how many users are logged on, what is the load average.
+#The load average determines how busy the system is. A load average 1.00 per CPU indicates that system is fully subscribed but not overloaded.
+#if the load average is above 1.00 it implies that processes are competing for CPU time.
+#if the load average is too high it might indicate that system is having problem such as a run away process(a process in a non-responding state)
+
+#second line of the output
+---------------------------
+ indicates the total number of processes which are running, sleeping and in zombie state. Comparing the number of processes with load average helps determines if the system has reached capacity or if particular is running too many processes.
+
+#third line of output
+----------------------
+ indicates how cpu is being divided between users and kernel by displaying percentage of CPU time for each. 
+
+#the percentage of user jobs running at low priority is listed(-ni), idle mode must be low if the load average is high and viceversa. The percentage of jobs waiting for I/O(wa) is then listed. Interfollowed by hardware interrupts and software interrupts and steal time which is generally used for virtual machines. 
+
+#fourth and fifth line of output
+---------------------------------
+ indicate memory usage which is divided into two parts.
+
+physical memory on line 4 and swap space on line 5. 
+
+Both lines display total memory, used memory and free space. 
+You need to monitor memory usage very carefully to ensure good system performance.
+once the physical memory is exhausted, the system starts using swap space (temporary storage space on hard drive ) as an extended memory pool. Since accessing disk is much slower than accessing memory this will negatively affect the system performance. 
+
+if the system starts using swap space we can consdier adding more swap space however increasing phyiscal memory is encouraged.
+
+
+Load Averages
+==============
+
+Load average is the average of load number for a given period of time. 
+It takes into account processes that are 
+1. actively running on CPU
+2. runnable processes
+3. sleeping
+
+uptime
+w
+top
+
+Interpreting Load Averages
+===========================
+
+The load average is displayed using three different sets of numbers. 
+
+The last piece of information is the average load of the system.
+Assuming that system is a single-CPU system, the 0.25 means that for a past minute.
+On a avg, the system has been 25% utilized. 0.12 in the next position means that over past 5 minutes the system has been 12% utilized and 0.15 in the next position means that over past 15 minutes the system has been 15% utilized. 
+
+
+
+Background and foreground processes
+===================================
+
+linux supports background and foreground processes.
+Foreground jobs run directly from the shell.
+when one job is running other jobs need to wait for shell access until this job is finished.
+
+bg #pushes the current job to background
+
+fg #runs the job in foreground respectively.
+
+
+at command
+===========
+
+at command sequence looks like this.
+
+at command schedules a command to run once at a particular time. 
+
+
+cron
+====
+
+cron is a time based scheduling utility program. 
+it can launch routine background jobs at specific times and / or days on an on-going basis.
+cron is driven by a configuration file called /etc/crontab (cron table) which contains various shell commands that need to be run at properly scheduled times. 
+
+
+Summary
+=======
+
+Processes can be single threaded or multithreaded.
+Processes can be of different types such as interactive or non interactive.
+Every process has a unique identifier PID to enable the OS to keep track of it.
+The nice value or niceness can be used to set priority
+ps provides valuable information about currently running process.
+you can use top to get real-time updates about overall system performance as well as information about the processes running on the system
+Load average indicates the amount of utilization the system is under at particular times.
+Linux supports background and foreground processing for a job
+at executes any non interactive command at specified time
+cron is used to schedule tasks that need to performed at regular intervals.

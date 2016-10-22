@@ -1,0 +1,332 @@
+Cat
+===
+cat is short for concatenate and is one of the most frequently used Linux command line utilities. It is often used to read and print files as well as for simply viewing file contents. To view a file, use the following command
+
+cat $fileName #used to read and print files as well as viewing file contents.
+cat $file1 $file2 #concatenate multiple files and display the output i.e. file1 content followed by file2 content.
+cat $file1 $file2 > $newFile #combine multiple files and save output to a new file.
+cat $file1 >> $existingFile #append a file to end of an existing file.
+cat > $file #any subsequent lines typed will go into the file until ctrl+D is typed.
+cat >> $file #any subsequent lines appended to the file until ctrl-D is typed.
+
+tac $file #prints the lines of a file in reverse order.
+tac $file1 $file2 > $newFile #concatenate file1 content and file2 content in reverse order to new file.
+
+Using cat interactively
+=======================
+
+cat <<$ENDWORD >$FileName #writes the standard input to the file until a endword is specified.
+
+echo
+=====
+
+echo simply displays (echoes) text. It is used simply as in
+
+echo $string #displays the string value to console.
+echo $string > $file #writes the value of string to a file
+echo $string >> $file #appends the value of a string to a file.
+
+
+Introduction to sed and awk
+===========================
+
+it is common to create and then repeatedly edit and/or extract contents from a file. 	
+sed and awk are used.
+
+sed
+====
+
+sed is abbreviation for stream editor.
+Data from input source is taken and moved to a working space. The entire list of operations is applied over the data in working space and final contents are moved to standard stream.
+
+sed -e $fileName #specify editing commands at the command line, operate on file and put the output on standard output i.e., terminal.
+
+sed -f $scriptFile $fileName #specify a scriptfile containing sed commands, operate on file and put output on standard out.
+
+
+
+Regular expressions
+====================
+
+
+Pattern 	Matches
+^A 	"A" at the beginning of a line
+A$ 	"A" at the end of a line
+A^ 	"A^" anywhere on a line
+$A 	"$A" anywhere on a line
+^^ 	"^" at the beginning of a line
+$$ 	"$" at the end of a line
+
+
+
+[Nn]ick #matches the pattern nick or Nick
+[a-c]ick #matches the pattern aick or bick or ccik
+
+The pattern . can matches to any character. 
+It is same as of [-.?+%$A-Za-z0-9...]
+matching non negative integers [0-9]+ or \d+
+\s for whitespace
+\w for alphanumeric and underscores
+\S for nonwhitespace character
+
+ab?c #matches pattern abc or ac
+
+* zero or more times
++ one or more times
+{n} exactly n times
+{n, } atleast n times
+{n, m} atleast n times but not more than m times
+{, m} atmax m times.
+
+[Nn]*ick #matches [Nn][Nn][Nn]...... ick.
+0abc+0 matches 0abc0 0abcc0 0abcccc0 and so on.
+
+0(abc)+0 matches 0abc0 0abcabc0 0abcabcabc0
+
+Nick|nick match either nick or Nick
+
+\\d\+ matches the pattern \d+
+
+sed basic operations
+====================
+
+sed "s/$pattern/$replaceString/" $file #substitute first string occurence in a line.
+sed "s/$pattern/$replaceString/g" $file #replace all the string occurences in a line.
+sed "1,3s/$pattern/$replaceString/g" $file #substitute all string occurences in a range of lines.
+sed -i "s/$pattern/$replaceString/g" $file #save changes for string substitution in the same file.
+
+sed "s/$new/$old/$n" $file #replaces the nth occurence of old with new pattern in the line the file
+sed "s/$new/$old/$ng" $file #replaces nth occurence of old with new pattern in all lines in the file
+sed "s/$pattern/$replace_string/g" $file1 > $file2 #save changes for file1 to file2
+
+awk
+===
+
+awk is used to extract and print specific contents of a file and is often used to construct reports.
+
+awk has following features.
+
+1. it is a powerful utility and interpreted programming language.
+2. it is used to manipulate data files, retrieving and processing text.
+3. it works with fields and records.
+
+awk '$command' var=value $file #specify command directly at the command line
+awk -f $scriptFile var=value $file #specify a file that contains the script to be executed along \ with f.
+
+sed and awk commands can be specified directly at the command line, but a more complex script can be saved in a file that you can specify using -f option
+
+awk basic operations
+====================
+
+The given input file is read one line at a time, awk matches given pattern in the order and performs the requested action. 
+
+awk -F$fieldSeparator -f $awkScript $fileName #uses the field separator and execute the awkScript to the file.
+
+sort
+====
+
+export LC_ALL=C
+sort $file #sorts the given file
+sort -c $file #check if the given file is sorted, if not report first disorder occured.
+sort -k$fieldNumber $file #sorts the file based on field separator
+sort -k3.3 $fileName #ignore the first 3 characters of the 3rd field separator 
+sort -k3.3, 3.5 $fileName #sort based from 3rd character to 5th character of the 3rd column.
+find . -name '$pattern' -print0 | sort --files0-from=- #prints the contents of all the files matching the pattern in a sorted order.
+
+sort -n $file #perform the numeric sort order 
+sort -h $file #sorts human readable numbers
+sort -M $file #sorts the file based on Month
+sort -u $file #sorts and displays it uniquely.
+sort -n -t '$delimiter' -k'$columnNo' $fileName #if each line in the file has multiple delimiters, sort the file based on the columnNo.
+
+uniq
+====
+
+uniq -c $file #count the occurences of the line
+uniq -d $file #prints the duplicate repeated lines in file
+uniq -u $file #prints the unique lines in the file
+uniq -D $file #prints all the duplicate repeated lines in file
+uniq -c -w$n $file #count the occurences of the line and compares upto n characters
+uniq -D -s$n $file #skips comparing the first n characters and print the all repeated lines with duplicate in the file
+uniq -f$n $file #skips comparing first n fields
+
+
+paste
+=====
+
+paste $file #same as cat
+paste -s $file #joins all the lines in the file, default delimiter is tab
+paste -d$delimiter -s $file #delimiter is used in the file to join all the line into the file.
+paste - - < $file #joins all the lines in to a single line with each line containing the specified number of columns.
+paste -d$delim - - - < $file #joins all the lines into 3 columns with delimiter delim
+paste $file1 $file2 #concatenate each line of file 1 and file 2.
+paste -d$delim $file1 $file2 #concatenate each line of file1 and file2 with a delimiter.
+cat $file1 | paste -d -file2 #one column from file2 is attached followed by column from file1
+
+join 
+=====
+
+join $file1 $file2 #joins the two files if the first column in two files remains the same.
+join -1$col1 -2$col2 $file1 $file2 #joins the two files based on col1 from first file and col2 from the second file 
+join -t$delim $file1 $file2 #use the delimiter to join the file1.
+join -i $file1 $file2 #ignore the differences between upper case and lower case
+join -o 1.1 2.1 -1 2 -2 2 $file1 $file2 #prints the 1st column from first file(1.1) and 1st column from second file (2.1) and join  the two files with second column from first file and second column from second file.
+join -a 1 -a 2 $file1 $file2 #prints the non matching lines from file1 and file2
+
+split
+=====
+
+split $file #splits the file into 1000 default chunks and names them with twoletter word file like xa xb
+split -a$n $file #splits the file and name chunk with n letter
+split -b$n $file #splits the file into equal chunks of n bytes
+split -d$n $file #splits the file with alphanumeric file names like x01, x02, x03
+split -n$Count $file #splits the file into count chunks. if count =2 2 files are created
+split -e $file #splits the file and wont create zero sized chunks
+split -l$N $file #splits the file in such a way that each chunk has N lines.
+split -v $file #splits verbose option. 	
+
+grep
+====
+
+grep $pattern $file #search for a pattern and print all matching files.
+grep -v $pattern $file #search for a pattern and print the lines that doesn't match the pattern
+grep [0-9] $file #print the lines containing 0 through 9
+grep -c $n $pattern $file #print context of lines that matching the pattern
+grep -r $pattern $file #recursively search sub directories
+
+grep $pattern $file1 $file2 #searches pattern in two files file1 and file2
+grep -l $pattern $files #lists the names of the files which conatain the pattern
+grep ^$pattern $files #display all the lines that start with specific pattern using ^ symbol.
+grep pattern$ $file #display all the lines that end with the pattern
+grep -e $pattern1 $pattern2 $file #searches multiple patterns using -e option
+grep -f $patternFile $file #search the file with list of patterns specified in the file.
+grep -B$n $pattern $file #displays N number of lines before pattern matching.
+grep -A$n $pattern $file #displays N number of lines after the pattern matching.
+grep -C$n $pattern $file #displays n number of lines around the pattern match.
+
+tr
+==
+
+tr is an utility command for translating, deleting or squeezing repeated characters.
+It will read from stdin to stdout.
+
+tr [option] $set1 $set2
+
+tr [a-z][A-Z] #convert the lower case to upper case
+tr {}() #replaces flower brackets to parenthesis.
+tr [:space:] '\t' $file #replaces the space with tab
+tr -s '\t' [:space:] $file #replaces a tab with space and squeeze the repetition if exists
+tr -d $char $file #removes particular characters using d option
+tr -d [:digit:] $file #removes all digits in a string
+tr -cd [:digit:] $file #removes all other than digits
+tr -cd [:print:] $file #removes all non printable characters in a file
+tr -s '\n' ' ' < file.txt #joins all the new lines into a single line.
+
+tee
+====
+
+tee takes the output from any command and saves to a new file while it is sending to standard output.
+
+ls -l | tee $file #displays the output of ls -al and also writes the output to $file
+
+wc
+==
+wc count the number of lines, characters, words in a afile or list of files.
+
+wc -l $fileName #display number of lines in a file
+wc -c $fileName #display number of bytes in a file
+wc -w $fileName #display number of words in a file
+wc -L $fileName #display the length of largest line in the file
+
+cut
+===
+
+Removes or cuts the sections of each line of a file or files.
+
+cut -f $n $file #cuts the nth field from each line 
+cut -f $start-$end $file #cut the file from the start to end column from each line in the file
+cut -f $start1-$end1, $start2-$end2 $file #cut from start1-end1 and then start2-end2 from each file.
+cut -f $start- $file #cut from the start to end from each line in the file
+cut -c $start-$end $file #cuts each line from the character at start to character at end
+cut -d $delimiter -f $n $file #cuts the line in the file using the delimiter and print the nth field, if it doesn't have the delimiter print the whole line
+cut -d $delimiter -s -f $n $file #prints the  nth field of the line only if it has delimiter.
+cut -d $delimiter --complement -s f$n # prints all fields in the line except nth column if delimiter exists
+cut -d $delimiter -f $start-$end --output-delimiter=$newDelimiter $file #displays the new delimiter in the output.
+
+
+Working with large files
+========================
+
+cat $file | less
+
+
+head
+====
+
+head -n$count $file #displays the count number of lines in the file. default displays 10 lines
+
+tail
+=====
+
+tail -n$count $file #displays the count number of lines in the file. default displays 10 lines.
+tail -f $file #continously monitor the new file
+
+Strings
+=======
+
+Strings $file #used to extract all printable characters found in the file
+
+The z command family
+====================
+
+when working with compressed files many standard commands cannot be used directly.
+
+zcat $file.gz #to view a compressed file
+zless $file.gz #to page through a compressed file
+zgrep -i $search $file.gz #to search inside a compressed file
+zdiff $file1.gz $file2.gz #to compare two compressed files.
+
+Similar to z tools for gz compression utility, we have bzcat, bzip2, xzcat, xzless associated with xz
+
+Summary
+========
+
+The command line often allows the users to perform tasks more efficiently than GUI
+cat short for concatenate is used for read, print and combine files.
+
+echo displays a line of text either on standard output or to place a file.
+
+sed is a popular stream editor often used to filter and perform substitutions on files and text data files.
+
+awk is a interpreted programming language typically used for data extraction and reporting tool.
+
+sort is used to sort text files and output streams in either ascending or descending order.
+
+uniq eliminates duplicate entries in the text file
+
+paste combines fields from different files and can also extract lines from multiple sources.
+
+join combines lines from two files based on a common field. It works only if files share a common field.
+
+split breaks file into equal sized segments.
+
+Regular expressions are used for pattern matching. The pattern can be used to search for a specific location such as the start or end of the word.
+
+grep searches the text files and data streams for patterns and can be used with regular expressions.
+
+tr translates characters, copies standard input to standard output and handles special characters
+
+tee accepts saves a copy of standard output to a file while still displaying at the terminal
+
+wc displays number of lines, words and characters in a file or group of files.
+
+cut extracts columns from a file.
+
+less views files a page at a time and allows scrolling in both directions.
+
+head displays the first few lines of a file or data stream on standard output, by default it displays 10 lines. 
+
+Strings extract printable characters from binary files.
+
+The z command is used to read and work with compressed files.
+
