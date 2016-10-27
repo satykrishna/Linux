@@ -235,6 +235,7 @@ zip backup * #compresses all the file in present working directory and places th
 zip -r backup $directory #compress all the files in the directory recursively and places them in backup.zip
 
 unzip backup.zip #extracts all the files in the file backup.zip and places them in the current directory
+unzip -d $directory backup.zip #extracts all the files in backup.zip and place in  the $directory
 
 zip -r $backup $directory #compress all the files in $directory and places in $backup.zip
 unzip 
