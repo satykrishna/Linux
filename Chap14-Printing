@@ -134,7 +134,7 @@ CUPs has to command line interfaces
 
  lpadmin #to configure printer queues
 
- loptions -d $printerName #sets the default printer with name printerName
+ lpoptions -d $printerName #sets the default printer with name printerName
 
  Managing print jobs
  ===================
@@ -250,3 +250,4 @@ evince $file.ps #will display the file.ps
 psnup -$option $file.ps $newfile.ps #will set the number of pages per sheet as per option
 
 
+Ricoh MP c2551 //office printer

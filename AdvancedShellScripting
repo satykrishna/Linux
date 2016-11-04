@@ -1,3 +1,45 @@
-Part-1 Introduction
-===================
+Escaped Sequence
+==================
 
+color   foreground background setaf/setab
+black	30-40 0
+Red 	31-41 1
+green 32-42 2
+yellow 33-43 3
+blue 34-44 4
+magenta 35-45 5
+cyan 36-46 6
+white 37-47 7
+
+Styling
+No style 0
+bold 1
+low intensity 2
+underline 4
+blinking 5
+reverse 7
+invisible 8
+
+\033[0m = reset
+
+echo -e '\033[$styling;$foreground;$backgroundm$Text\033[0m' 
+
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;34;47m\]\!\[\033[01;00m\]:\[\033[01;34m\]\u\[\033[00m\]:\[\033[00;34m\]\[\033[00;3m\]\W\[\033[01;34m\]\[\033[00;3m\]$(parse_git_branch)\[\033[00m\] \[\033[01;34m\]> \[\033[00;00m\]'
+
+
+foreground tput setaf 0-7
+background tput setab 0-7
+no style tput sgv0
+bold tput bold
+low intensity tput dim
+underline tput smul
+blinking tput blink
+reverse tput rev
+reset tput sgr0
+
+
+flashred=$(tput setab 0; tput setaf 1 ; tput blink)
+red=$(tput setab 0; tput setaf 1 )
+none=$(tput sgv0)
+
+echo -e "$flashRed ERROR: $none$red something went wrong $none"

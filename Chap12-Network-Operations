@@ -180,10 +180,10 @@ Queries network interfaces and can also set various parameters such as the speed
 sudo ethtool $networkInterfaceName #queries the network interface with interfaceName
 
 
-netcat
+netsat
 ======
 
-netcat displays various network related information such as network connections, routing tables, interface stats, masquerade connections, multicast memberships etc.
+netstat displays various network related information such as network connections, routing tables, interface stats, masquerade connections, multicast memberships etc.
 
 netstat -a #lists all ports both listening and not listening
 netstat -at #lists all tcp ports
@@ -287,6 +287,12 @@ curl -u $ftpuser:$ftppassword -O $ftpURL #downloads files from FTP server.
 
 curl -T $fileName $ftpURL #uploads the files to ftp server.
 
+curl dict://dict.org/d:bash #The  command will list the meaning for bash as follows
+
+curl dict://dict.org/show:db #list the available dictionaries
+
+curl dict://dict.org/d:bash:foldoc #get the meaning from foldoc dictionary
+
 FTP Clients
 ============
 
@@ -316,6 +322,13 @@ We can move files securely using SCP between two networked hosts. scp uses SSH p
 scp $localFile $remoteSystem #copies localFile to a remote system
 
 
+
+Add networking to virtualbox
+============================
+
+go to the place where virtualbox is installed in the windows machine or the host machine and run following command
+
+VBoxManage modifyvm "VM name" --natdnshostresolver1 on
 
 
 
