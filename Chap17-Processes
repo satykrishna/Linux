@@ -186,6 +186,20 @@ cron is a time based scheduling utility program.
 it can launch routine background jobs at specific times and / or days on an on-going basis.
 cron is driven by a configuration file called /etc/crontab (cron table) which contains various shell commands that need to be run at properly scheduled times. 
 
+MIN 	Minutes 	0 to 59
+HOUR 	Hour field 	0 to 23
+DOM 	Day of Month 	1-31
+MON 	Month field 	1-12
+DOW 	Day Of Week 	0-6 (0 = Sunday)
+CMD 	Command 	Any command to be executed
+
+Examples:
+1. The entry "* * * * * /usr/local/bin/execute/this/script.sh" will schedule a job to execute 'script.sh' every minute of every hour of every day of the month, and every month and every day in the week.
+
+2. The entry "30 08 10 06 * /home/sysadmin/full-backup" will schedule a full-backup at 8.30am, 10-June irrespective of the day of the week.
+
+
+
 
 Summary
 =======
